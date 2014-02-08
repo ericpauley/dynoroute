@@ -2,10 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Gym(models.Model):
-    name = models.CharField()
+    name = models.CharField(max_length=255)
 
 class Route(models.Model):
-    name = models.CharField(blank=True)
+    name = models.CharField(blank=True, max_length=255)
 
     TYPE_CHOICES = (
         ('top_rope', 'Top Rope'),
@@ -52,11 +52,11 @@ class Route(models.Model):
         }
     }
 
-    type = models.CharField(choices=TYPE_CHOICES)
+    type = models.CharField(choices=TYPE_CHOICES, max_length=16)
     difficulty = models.IntegerField()
-    setter = models.ForeignKey(User)
+    setter = models.ForeignKey(User, related_name='routes')
     date_set = models.DateField()
-    gym = models.ForeignKey(Gym)
+    gym = models.ForeignKey(Gym, related_name='routes')
 
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)

@@ -23,12 +23,12 @@
 	<link rel="stylesheet" href="{% static 'js/plugins/fullcalendar/fullcalendar.css' %}" type="text/css" />
 	
 	<link rel="stylesheet" href="{% static 'css/App.css' %}" type="text/css" />
-
+	{%block customcss%}{%endblock%}
 	<link rel="stylesheet" href="{% static 'css/custom.css' %}" type="text/css" />	
 </head>
 
 <body>
-
+{%block body%}
 <div id="wrapper">
 	<header id="header">
 
@@ -65,7 +65,7 @@
 <footer id="footer">
 	{% include "footer.html" %}
 </footer>
-
+{%endblock%}
 <script src="{% static 'js/libs/jquery-1.9.1.min.js' %}"></script>
 <script src="{% static 'js/libs/jquery-ui-1.9.2.custom.min.js' %}"></script>
 <script src="{% static 'js/libs/bootstrap.min.js' %}"></script>
@@ -86,7 +86,7 @@
 
 <script src="{% static 'js/plugins/fullcalendar/fullcalendar.min.js' %}"></script>
 <script src="{% static 'js/demos/calendar.js' %}"></script>
-
+{%block customjs%}{%endblock%}
 <script src="{% static 'js/demos/dashboard.js' %}"></script>
 
 </body>

@@ -1,6 +1,6 @@
 <ul class="nav navbar-nav pull-left">
 	<li class="">
-		<a href="./index.html">
+		<a href="{%url 'home'%}">
 			<i class="fa fa-home"></i> 
 			Home
 		</a>
@@ -23,11 +23,18 @@
 
 <ul class="nav navbar-nav pull-right">
 	<li class="dropdown">
+		{%if user.is_authenticated%}
 		<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
 			<i class="fa fa-user"></i>
         	Rod Howard 
         	<span class="caret"></span>
     	</a>
+    	{%else%}
+    	<a class="dropdown-toggle" href="{%url 'login'%}">
+			<i class="fa fa-user"></i>
+        	Log In
+    	</a>
+    	{%endif%}
 
     	<ul class="dropdown-menu" role="menu">
 	        <li>

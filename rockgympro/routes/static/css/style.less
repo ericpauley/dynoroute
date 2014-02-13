@@ -1,7 +1,55 @@
 @bgcolor: #ececec;
 @text-primary: #666666;
+@red: #e5412d;
+@yellow: #f0ad4e;
+@gray: #888888;
+@blue: #3498db;
 
-body{
+body {
 	background: @bgcolor;
 	color: @text-primary;
+}
+
+a {
+	text-decoration: none !important;
+}
+
+.dashboard-btn (@color: #ffffff) {
+	position: relative;
+	display: block;
+	padding: 30px 20px;
+	background-color: @color;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	overflow: hidden;
+	text-decoration: none;
+	color: #ffffff;
+	font-size: 24px;
+	text-align: center
+}
+
+.dash-btn-red {
+	.dashboard-btn(@red);
+}
+
+.dash-btn-yellow {
+	.dashboard-btn(@yellow);
+}
+
+.dash-btn-blue {
+	.dashboard-btn(@blue);
+}
+
+.dash-btn-gray {
+	.dashboard-btn(@gray);
+}
+
+.color-box {
+	display: inline-block;
+	margin: 0 auto;
+	width: 15px;
+	height: 15px;
+	border: 1px solid @gray;
 }

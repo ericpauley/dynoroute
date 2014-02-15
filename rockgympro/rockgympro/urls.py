@@ -8,5 +8,5 @@ urlpatterns = patterns('',
     # url(r'^$', 'rockgympro.views.home', name='home'),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include('routes.urls')),
+    url(r'^gym/(?P<gym_name>\w{8,32})/', include('gyms.urls')),
 )

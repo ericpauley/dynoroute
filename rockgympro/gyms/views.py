@@ -10,7 +10,7 @@ def resolve_gym(func):
 
 @resolve_gym
 def gym_page(request, gym):
-	return render(request, "dashboard.html")
+	return render(request, "home.html", {'gym':gym})
 
 @resolve_gym
 def route(request, gym, route):

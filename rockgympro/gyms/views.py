@@ -13,7 +13,7 @@ def gym_page(request, gym):
 	return render(request, "home.html", {'gym':gym})
 
 @resolve_gym
-def vroutes(request, gym):
+def routes(request, gym):
 	return render(request, "dashboard.html")
 
 @resolve_gym

@@ -13,5 +13,9 @@ def gym_page(request, gym):
 	return render(request, "home.html", {'gym':gym})
 
 @resolve_gym
+def vroutes(request, gym):
+	return render(request, "dashboard.html")
+
+@resolve_gym
 def route(request, gym, route):
 	return render(request, "route.html")

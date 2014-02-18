@@ -51,6 +51,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+AUTHENTICATION_BACKENDS = (
+    'rockgympro.backends.CaseInsensitiveModelBackend',
+)
+
 ROOT_URLCONF = 'rockgympro.urls'
 
 WSGI_APPLICATION = 'rockgympro.wsgi.application'

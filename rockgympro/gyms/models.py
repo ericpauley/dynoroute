@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+import random
 
-class Dated(models.Model):
+class DatedMixin(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
@@ -9,7 +10,20 @@ class Dated(models.Model):
     class Meta:
         abstract = True
 
-class Gym(Dated):
+class SluggedMixin(models.Model):
+    slug = models.SlugField(primary_key=True, unique=True, editable=False, blank=True)
+
+    def save(self, *args, **kwargs):
+        while not self.slug:
+            newslug = "".join(random.sample('1234567890abcdefghjkmnpqrstuvwxyz', 5))
+            if self.__class__.objects.filter(slug=newslug).count() == 0:
+                self.slug = newslug
+        super(SluggedMixin, self).save(*args, **kwargs)
+
+    class Meta:
+        abstract = True
+
+class Gym(DatedMixin):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=32)
     members = models.ManyToManyField(User, through='Membership', related_name="gyms")
@@ -17,7 +31,7 @@ class Gym(Dated):
     def __unicode__(self):
         return self.name
 
-class Membership(Dated):
+class Membership(DatedMixin):
 
     MEMBERSHIP_LEVELS = (
         (10000, 'Owner'),
@@ -31,7 +45,7 @@ class Membership(Dated):
     gym = models.ForeignKey(Gym)
     level = models.IntegerField(choices=MEMBERSHIP_LEVELS)
 
-class Route(Dated):
+class Route(DatedMixin, SluggedMixin):
     name = models.CharField(blank=True, max_length=255)
 
     TYPE_CHOICES = (
@@ -85,5 +99,6 @@ class Route(Dated):
     difficulty = models.IntegerField(choices=RATING_CHOICES, blank=False)
     setter = models.ForeignKey(User, related_name='routes')
     date_set = models.DateField()
+    date_torn = models.DateField(blank=True, null=True)
     gym = models.ForeignKey(Gym, related_name='routes')
     

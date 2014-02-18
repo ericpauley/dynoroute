@@ -10,12 +10,12 @@ def resolve_gym(func):
 
 @resolve_gym
 def gym_page(request, gym):
-	return render(request, "home.html", {'gym':gym})
+	return render(request, "gym_page.html", {'gym':gym, 'pg':'gym_page'})
 
 @resolve_gym
 def routes(request, gym):
-	return render(request, "dashboard.html")
+	return render(request, "gym_routes.html", {'gym':gym, 'pg':'gym_routes'})
 
 @resolve_gym
 def route(request, gym, route):
-	return render(request, "route.html")
+	return render(request, "route.html", {'gym':gym})

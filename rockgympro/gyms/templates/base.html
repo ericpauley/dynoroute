@@ -54,10 +54,11 @@
 	</nav>
 
 	<div id="sidebar-wrapper" class="collapse sidebar-collapse">
-		{% include "sidebar.html" %}
+		{%block sidebar%}{%endblock%}
 	</div>
 
 	<div id="content">
+		{%block header%}{%endblock%}
 		{% block content %}404 error{% endblock %}
 	</div>
 

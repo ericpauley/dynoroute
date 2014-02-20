@@ -13,13 +13,13 @@
 	
 	<ul id="main-nav" class="open-active">			
 
-		<li {%if pg == "gym_page"%}class="active"{%endif%}>				
+		<li {%if request.resolver_match.url_name == "gym_page"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_page' gym=gym.slug%}">
 				<i class="fa fa-dashboard"></i>
 				{{gym.name}}
 			</a>				
 		</li>
-		<li {%if pg == "gym_routes"%}class="active"{%endif%}>				
+		<li {%if request.resolver_match.url_name == "gym_routes"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_routes' gym=gym.slug%}">
 				<i class="fa fa-briefcase"></i>
 				Routes
@@ -46,3 +46,5 @@
 	</div>
 </div> <!-- #content-header -->	
 {%endblock%}
+
+{%block url%}{%url 'gym_page' gym=gym.slug%}{%endblock%}

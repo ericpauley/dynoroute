@@ -102,3 +102,7 @@ class Route(DatedMixin, SluggedMixin):
     date_torn = models.DateField(blank=True, null=True)
     gym = models.ForeignKey(Gym, related_name='routes')
     
+    @property 
+    def formatted_difficulty(self):
+        routeType = dict(Route.TYPE_CHOICES)[self.type]
+        return dict(Route.RATING_CHOICES)[routeType][self.difficulty][1]

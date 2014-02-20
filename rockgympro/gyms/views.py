@@ -2,27 +2,40 @@ from django.shortcuts import render, get_object_or_404
 from gyms.models import Gym, Route
 from django.utils.timezone import now
 from django.http import Http404
+from django.views.generic import ListView, DetailView
+from django.views.generic.detail import SingleObjectMixin
 
-def resolve_gym(func):
-	def result(*args, **kwargs):
-		if 'gym' in kwargs:
-			kwargs['gym'] = get_object_or_404(Gym, slug=kwargs['gym'])
-		return func(*args, **kwargs)
-	return result
+class GymFinderMixin(SingleObjectMixin):
 
-@resolve_gym
-def gym_page(request, gym):
-	return render(request, "gym_page.html", {'gym':gym, 'pg':'gym_page'})
+    model = Gym
+    slug_url_kwarg = "gym"
 
-@resolve_gym
-def routes(request, gym):
-	routes = gym.routes.filter(date_torn__isnull=True, date_torn__lte=now())
-	return render(request, "gym_routes.html", {'gym':gym, 'pg':'gym_routes', 'routes':routes})
+    def get(self, request, *args, **kwargs):
+        self.object = get_object_or_404(Gym, slug=self.kwargs['gym'])
+        return super(GymFinderMixin, self).get(request, *args, **kwargs)
 
-@resolve_gym
-def route(request, gym, route):
-	try:
-		route = gym.routes.get(slug=route)
-	except Route.DoesNotExist:
-		raise Http404
-	return render(request, "route.html", {'gym':gym})
+    def get_context_data(self, **kwargs):
+        context = super(GymFinderMixin, self).get_context_data(**kwargs)
+        context['gym'] = self.object
+        return context
+
+class GymPage(GymFinderMixin, DetailView):
+
+    template_name="gym_page.html"
+
+class RoutesPage(GymFinderMixin, ListView):
+
+    paginate_by = 2
+    template_name = "gym_routes.html"
+
+    def get_queryset(self):
+        return self.object.routes.all()
+
+class RoutePage(GymPage):
+
+    template_name = "gym_route.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(GymFinderMixin, self).get_context_data(**kwargs)
+        context['route'] = get_object_or_404(self.object.routes, slug=self.kwargs['route'])
+        return context

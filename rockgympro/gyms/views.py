@@ -23,6 +23,14 @@ class GymPage(GymFinderMixin, DetailView):
 
     template_name="gym_page.html"
 
+class GymAdmin(GymPage):
+
+    def get_object(self, *args, **kwargs):
+        obj = super(GymAdmin, self).get_object(*args, **kwargs)
+        if self.request.user.gym != obj and obj.owner != self.request.user:
+            raise Http404 # maybe you'll need to write a middleware to catch 403's same way
+        return obj
+
 class RoutesPage(GymFinderMixin, ListView):
 
     paginate_by = 2
@@ -39,3 +47,7 @@ class RoutePage(GymPage):
         context = super(GymFinderMixin, self).get_context_data(**kwargs)
         context['route'] = get_object_or_404(self.object.routes, slug=self.kwargs['route'])
         return context
+
+class GymDashboard(GymAdmin):
+
+    template_name="gym_dashbaord.html"

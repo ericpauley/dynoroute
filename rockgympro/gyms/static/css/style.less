@@ -14,37 +14,6 @@ a {
 	text-decoration: none !important;
 }
 
-.dashboard-btn (@color: #ffffff) {
-	position: relative;
-	display: block;
-	padding: 30px 20px;
-	background-color: @color;
-	border-top-right-radius: 5px;
-	border-top-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-	border-bottom-left-radius: 5px;
-	overflow: hidden;
-	text-decoration: none;
-	color: #ffffff;
-	font-size: 24px;
-	text-align: center
-}
-
-.dash-btn-red {
-	.dashboard-btn(@red);
-}
-
-.dash-btn-yellow {
-	.dashboard-btn(@yellow);
-}
-
-.dash-btn-blue {
-	.dashboard-btn(@blue);
-}
-
-.dash-btn-gray {
-	.dashboard-btn(@gray);
-}
 
 .color-box {
 	display: inline-block;
@@ -54,9 +23,31 @@ a {
 	border: 1px solid @gray;
 }
 
+.color-box-lg {
+	display: inline-block;
+	margin: 0 auto;
+	width: 25px;
+	height: 25px;
+	border: 1px solid @gray;
+}
+
 .gym-info {
 	margin-top: 15px;
 	margin-right: 15px;
 	margin-bottom: 15px;
 	text-align: right;
+}
+
+#route-title {
+	font-size: 25px;
+	padding-right: 10px;
+	display: inline-block;
+}
+
+#route-rate {
+	font-size: 25px;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	color: @text-primary;
 }

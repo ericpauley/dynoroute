@@ -2332,6 +2332,9 @@ html .fc,
 .simplecolorpicker span.selected i {
   visibility: visible !important;
 }
+.simplecolorpicker i.fa-ban {
+  visibility: visible !important; 
+}
 .jqstooltip {
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;

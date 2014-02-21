@@ -13,10 +13,10 @@
 	
 	<ul id="main-nav" class="open-active">			
 
-		<li {%if request.resolver_match.url_name == "gym_page"%}class="active"{%endif%}>				
-			<a href="{%url 'gym_page' gym=gym.slug%}">
+		<li {%if request.resolver_match.url_name == "gym_dashbaord"%}class="active"{%endif%}>				
+			<a href="{%url 'gym_dashboard' gym=gym.slug%}">
 				<i class="fa fa-dashboard"></i>
-				{{gym.name}}
+				Dashboard
 			</a>				
 		</li>
 		<li {%if request.resolver_match.url_name == "gym_routes"%}class="active"{%endif%}>				
@@ -25,14 +25,12 @@
 				Routes
 			</a>				
 		</li>
-		{%if user.gym == gym or gym.owner == user%}
 		<li>				
-			<a href="{%url 'gym_dashboard' gym=gym.slug%}">
+			<a href="{%url 'gym_page' gym=gym.slug%}">
 				<i class="fa fa-sign-out"></i>
-				Admin
+				Exit Admin
 			</a>				
 		</li>
-		{%endif%}
 	</ul>
 </nav>
 {%endblock%}

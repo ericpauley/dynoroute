@@ -15,3 +15,6 @@ class User(AbstractUser):
     def clean(self):
          if self.gym and not self.level:
             self.level = 500
+
+    def initials(self):
+        return "%s %s" % (self.first_name[:1].upper(), self.last_name[:1].upper())

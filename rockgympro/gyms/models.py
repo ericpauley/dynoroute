@@ -90,6 +90,7 @@ class Route(DatedMixin, SluggedMixin):
     type = models.CharField(choices=TYPE_CHOICES, max_length=16, blank=False)
     difficulty = models.IntegerField(choices=RATING_CHOICES, blank=False)
     setter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='routes')
+    location = models.CharField(max_length=32)
     date_set = models.DateField()
     date_torn = models.DateField(blank=True, null=True)
     gym = models.ForeignKey(Gym, related_name='routes')
@@ -97,4 +98,4 @@ class Route(DatedMixin, SluggedMixin):
     @property 
     def formatted_difficulty(self):
         routeType = dict(Route.TYPE_CHOICES)[self.type]
-        return dict(Route.RATING_CHOICES)[routeType][self.difficulty][1]
+        return dict(dict(Route.RATING_CHOICES)[routeType])[self.difficulty]

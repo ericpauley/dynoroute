@@ -1,0 +1,200 @@
+{%extends 'gym_backend.html'%}
+{% load staticfiles %}
+{% block content %}
+<div id="content-container">
+	<div class="row visible-xs">
+
+		<div class="col-md-3 col-sm-6">
+
+			<a href="#" class="dash-btn-red">
+				Add Route
+			</a> <!-- /.dashboard-btn -->
+
+		</div> <!-- /.col-md-3 -->
+		
+		<div class="col-md-3 col-sm-6">
+
+			<a href="#" class="dash-btn-yellow">
+				View Routes
+			</a> <!-- /.dashboard-btn -->
+
+		</div> <!-- /.col-md-3 -->
+
+		<div class="col-md-3 col-sm-6">
+
+			<a href="#" class="dash-btn-blue">
+				Settings
+			</a> <!-- /.dashboard-btn -->
+
+		</div> <!-- /.col-md-3 -->
+		<div class="col-md-3 col-sm-6">
+
+			<a href="#" class="dash-btn-gray">
+				Logout
+			</a> <!-- /.dashboard-btn -->
+
+		</div> <!-- /.col-md-3 -->
+
+	</div> <!-- /.row -->
+
+	<div class="row">
+
+		<div class="col-md-12">
+
+			<div class="row">
+
+			<div class="col-md-6">
+
+				<div class="portlet">
+
+					<div class="portlet-header">
+
+						<h3>
+							<i class="fa fa-group"></i>
+							Recent Routes
+						</h3>
+
+						<ul class="portlet-tools pull-right">
+							<li>
+								<a href="#" />
+									<button class="btn btn-sm btn-default">
+										See All
+									</button>
+								</a>
+							</li>
+						</ul>
+
+					</div> <!-- /.portlet-header -->
+
+					<div class="portlet-content">
+
+
+						<div class="table-responsive">
+
+						<table id="user-signups" class="table table-striped table-checkable"> 
+							<thead> 
+								<tr> 
+									<th class="align-center">Edit</th> 
+									<th class="align-center">Color</th> 
+									<th>Rating</th> 
+									<th>Location</th>
+									<th>Setter</th>
+									<th class="hidden-md">Status</th> 
+								</tr> 
+							</thead> 
+
+							<tbody> 
+								<tr class=""> 
+									<td class="align-center">
+										<a href="javascript:void(0);" class="btn btn-xs btn-primary" data-original-title="Approve">
+											<i class="fa fa-pencil"></i>
+										</a> 
+									</td> 
+									<td class="align-center"> 
+										<div class="color-box"></div>
+										<div class="color-box"></div>
+									</td>
+									<td>V6</td> 
+									<td>Back Wall</td>
+									<td>JH</td>
+									<td class="hidden-md"><span class="label label-success">Complete</span></td> 
+								</tr> 
+								<tr class="">
+									<td class="align-center">
+										<a href="javascript:void(0);" class="btn btn-xs btn-primary" data-original-title="Approve">
+											<i class="fa fa-pencil"></i>
+										</a> 
+									</td>
+									<td class="align-center">
+										<div class="color-box"></div>
+									</td>
+									<td>V6</td> 
+									<td>Back Wall</td>
+									<td>JH</td>
+									<td class="hidden-md"><span class="label label-default">Incomplete</span>
+									</td>
+								</tr>
+								<tr class=""> 
+									<td class="align-center">
+										<a href="javascript:void(0);" class="btn btn-xs btn-primary" data-original-title="Approve">
+											<i class="fa fa-pencil"></i>
+										</a> 
+									</td>
+									<td class="align-center">  
+										<div class="color-box"></div>
+									</td>
+									<td>V6</td> 
+									<td>Back Wall</td>
+									<td>JH</td>
+									<td class="hidden-md"><span class="label label-success">Complete</span></td>
+								</tr> 
+								<tr class="">
+									<td class="align-center">
+										<a href="javascript:void(0);" class="btn btn-xs btn-primary" data-original-title="Approve">
+											<i class="fa fa-pencil"></i>
+										</a> 
+									</td> 
+									<td class="align-center">  
+										<div class="color-box"></div>
+									</td>
+									<td>V6</td> 
+									<td>Back Wall</td>
+									<td>JH</td>
+									<td class="hidden-md"><span class="label label-success">Complete</span></td>					
+								</tr> 
+								<tr class="">
+									<td class="align-center">
+										<a href="javascript:void(0);" class="btn btn-xs btn-primary" data-original-title="Approve">
+											<i class="fa fa-pencil"></i>
+										</a> 
+									</td> 
+									<td class="align-center"> 
+										<div class="color-box"></div>
+									</td>
+									<td>V6</td> 
+									<td>Back Wall</td>
+									<td>JH</td>
+									<td class="hidden-md"><span class="label label-success">Complete</span></td> 
+								</tr>
+									
+							</tbody> 
+						</table>
+								
+
+						</div> <!-- /.table-responsive -->
+						
+					</div> <!-- /.portlet-content -->
+
+				</div> <!-- /.portlet -->
+
+			</div> <!-- /.col-md-6 -->
+
+			<div class="col-md-6">
+
+				<div class="portlet">
+
+					<div class="portlet-header">
+
+						<h3>
+							<i class="fa fa-calendar"></i>
+							Full Calendar
+						</h3>
+
+					</div> <!-- /.portlet-header -->
+
+					<div class="portlet-content">
+
+						<div id="full-calendar"></div>
+
+					</div> <!-- /.portlet-content -->
+
+				</div> <!-- /.portlet -->
+			</div> <!-- /.col-md-6 -->
+			</div> <!-- /.row -->
+
+		</div> <!-- /.col-md-12 -->
+
+	</div> <!-- /.row -->
+
+</div> <!-- /#content-container -->
+{%endblock%}

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from gyms.models import Gym, Route, Membership
+from users.models import User
 
 class MembershipInline(admin.TabularInline):
 	model = Membership

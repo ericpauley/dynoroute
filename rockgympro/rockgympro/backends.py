@@ -1,5 +1,5 @@
 from django.contrib.auth.backends import ModelBackend
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 class CaseInsensitiveModelBackend(ModelBackend):
     """
@@ -8,10 +8,10 @@ class CaseInsensitiveModelBackend(ModelBackend):
     """
     def authenticate(self, username=None, password=None):
         try:
-            user = User.objects.get(username__iexact=username)
+            user = get_user_model().objects.get(username__iexact=username)
             if user.check_password(password):
                 return user
             else:
                 return None
-        except User.DoesNotExist:
+        except get_user_model().DoesNotExist:
             return None

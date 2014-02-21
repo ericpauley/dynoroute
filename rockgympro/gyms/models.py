@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 import random
 
 class DatedMixin(models.Model):
@@ -26,24 +26,16 @@ class SluggedMixin(models.Model):
 class Gym(DatedMixin):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=32)
-    members = models.ManyToManyField(User, through='Membership', related_name="gyms")
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Membership', related_name="gyms")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="owned_gyms")
 
     def __unicode__(self):
-        return self.name
+        return self.name 
 
 class Membership(DatedMixin):
 
-    MEMBERSHIP_LEVELS = (
-        (10000, 'Owner'),
-        (5000, 'Manager'),
-        (1000, 'Setter'),
-        (500, 'Employee'),
-        (0, 'Member'),
-    )
-
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     gym = models.ForeignKey(Gym)
-    level = models.IntegerField(choices=MEMBERSHIP_LEVELS)
 
 class Route(DatedMixin, SluggedMixin):
     name = models.CharField(blank=True, max_length=255)
@@ -97,7 +89,7 @@ class Route(DatedMixin, SluggedMixin):
 
     type = models.CharField(choices=TYPE_CHOICES, max_length=16, blank=False)
     difficulty = models.IntegerField(choices=RATING_CHOICES, blank=False)
-    setter = models.ForeignKey(User, related_name='routes')
+    setter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='routes')
     date_set = models.DateField()
     date_torn = models.DateField(blank=True, null=True)
     gym = models.ForeignKey(Gym, related_name='routes')

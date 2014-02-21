@@ -1,0 +1,118 @@
+{% extends "gym_frontend.html" %}
+{% load staticfiles %}
+{% block content %}
+<div id="content-container">
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="portlet">
+
+                <div class="portlet-header">
+
+                    <h3>
+                        Add New Route
+                    </h3>
+
+                </div> <!-- /.portlet-header -->
+
+                <div class="portlet-content">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>Route Type:</label>
+                            <div class="form-group">
+                                <label class="radio-inline">
+                                    <input type="radio" name="route_type" id="route_type_boulder" value="boulder" checked>
+                                        Boulder
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="route_type" id="route_type_toprope" value="toprope">
+                                        Top Rope
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="select-input">Grade</label>
+                            <select id="route-grade" class="form-control">
+                                <option>V0-</option>
+                                <option>V0</option>
+                                <option>V0+</option>
+                                <option>V2-</option>
+                                <option>V2</option>
+                                <option>V2+</option>
+                                <option>V3-</option>
+                                <option>V3</option>
+                                <option>V3+</option>
+                                <option>V4-</option>
+                                <option>V4</option>
+                                <option>V4+</option>
+                                <option>V5-</option>
+                                <option>V5</option>
+                                <option>V5+</option>
+                                <option>V6-</option>
+                                <option>V6</option>
+                                <option>V6+</option>
+                                <option>V7-</option>
+                                <option>V7</option>
+                                <option>V7+</option>
+                                <option>V8-</option>
+                                <option>V8</option>
+                                <option>V8+</option>
+                                <option>V9-</option>
+                                <option>V9</option>
+                                <option>V9+</option>
+                                <option>V10-</option>
+                                <option>V10</option>
+                                <option>V10+</option>
+                                <option>V11-</option>
+                                <option>V11</option>
+                                <option>V11+</option>
+                                <option>V12-</option>
+                                <option>V12</option>
+                                <option>V12+</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Color(s)</label><br/>
+                            <select id="route-color" name="colorpicker" class="form-control">
+                                <option value="#fffffe">Clear</option>
+                                <option value="#e5412d">Red</option>
+                                <option value="#f0ad4e">Yellow</option>
+                                <option value="#428bca">Blue</option>
+                                <option value="#5cb85c">Green</option>
+                                <option value="#5bc0de">Teal</option>
+                            </select>
+                            <select id="route-color2" name="colorpicker" class="form-control">
+                                <option>Select</option>
+                                <option value="#e5412d">Red</option>
+                                <option value="#f0ad4e">Yellow</option>
+                                <option value="#428bca">Blue</option>
+                                <option value="#5cb85c">Green</option>
+                                <option value="#5bc0de">Teal</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Date Set</label>
+                            <div id="route-date-set" class="input-group date">
+                                <input class="form-control" type="text">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="select-input">Setter</label>
+                            <select id="route-setter" class="form-control">
+                                <option>Justin Hundley</option>
+                                <option>Setter #2</option>
+                            </select>
+                        </div>
+                    </div>                  
+                </div> <!-- /.portlet-content -->
+
+            </div> <!-- /.portlet -->
+
+        </div> <!-- /.col-md-12 -->
+    </div> <!-- /.row -->
+</div>
+{% endblock %}

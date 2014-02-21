@@ -65,9 +65,14 @@
       // Build the list of colors
       // <span class="selected" title="Green" style="background-color: #7bd148;" role="button"></span>
       self.$select.find('> option').each(function() {
+        fakeText = '&nbsp;&nbsp;&nbsp;&nbsp;';
+        fakeText = '<i class="fa fa-check"></i>';
         var $option = $(this);
         var color = $option.val();
         var title = $option.text();
+        if (title === 'Clear') {
+          fakeText = '<i class="fa fa-ban" style="color: red"></i>';
+        }
         var selected = '';
         if ($option.prop('selected') === true || selectValue === color) {
           selected = 'class="selected"';

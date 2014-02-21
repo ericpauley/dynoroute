@@ -56,3 +56,7 @@ class RoutePage(GymPage):
 class GymDashboard(GymAdmin):
 
     template_name="gym_dashboard.html"
+
+class GymAdminRouteAdd(GymAdmin):
+
+	template_name="gym_route_add.html"

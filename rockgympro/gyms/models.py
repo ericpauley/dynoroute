@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 import random
+from django.utils import timezone
 
 class DatedMixin(models.Model):
 
@@ -46,54 +47,59 @@ class Route(DatedMixin, SluggedMixin):
     )
 
     RATING_CHOICES = (
-        ('Top Rope', (
-            (0,  '5.0'),
-            (1,  '5.1'),
-            (2,  '5.2'),
-            (3,  '5.3'),
-            (4,  '5.4'),
-            (5,  '5.5'),
-            (6,  '5.6'),
-            (7,  '5.7'),
-            (8,  '5.8'),
-            (9,  '5.9'),
-            (10, '5.10'),
-            (11, '5.11'),
-            (12, '5.12'),
-            (13, '5.13'),
-            (14, '5.14'),
-            (15, '5.15'),
-            )
-        ),
-        ('Bouldering', (
-            (1000,  'V0'),
-            (1001,  'V1'),
-            (1002,  'V2'),
-            (1003,  'V3'),
-            (1004,  'V4'),
-            (1005,  'V5'),
-            (1006,  'V6'),
-            (1007,  'V7'),
-            (1008,  'V8'),
-            (1009,  'V9'),
-            (1010, 'V10'),
-            (1011, 'V11'),
-            (1012, 'V12'),
-            (1013, 'V13'),
-            (1014, 'V14'),
-            (1015, 'V15'),
-            (1016, 'V16'),
-            )
-        ),
+        ('Top Rope', []),
+        ('Bouldering', []),
     )
 
-    type = models.CharField(choices=TYPE_CHOICES, max_length=16, blank=False)
-    difficulty = models.IntegerField(choices=RATING_CHOICES, blank=False)
+    for i in range(5,16):
+        if i > 9:
+            RATING_CHOICES[0][1].append((i-.25, "5.%s-" % i))
+        RATING_CHOICES[0][1].append((i, "5.%s" % i))
+        if i >= 9:
+            RATING_CHOICES[0][1].append((i+.25, "5.%s+" % i))
+
+    for i in range(0,14):
+        RATING_CHOICES[1][1].append((i-.25, "V%s-" % i))
+        RATING_CHOICES[1][1].append((i, "V%s" % i))
+        RATING_CHOICES[1][1].append((i+.25, "V%s+" % i))
+
+    type = models.CharField(choices=TYPE_CHOICES, max_length=16, blank=False, default="bouldering")
+    difficulty = models.FloatField(choices=RATING_CHOICES, blank=False)
     setter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='routes')
     location = models.CharField(max_length=32)
-    date_set = models.DateField()
+    date_set = models.DateField(default=timezone.now())
     date_torn = models.DateField(blank=True, null=True)
     gym = models.ForeignKey(Gym, related_name='routes')
+    notes = models.TextField(blank=True)
+
+    STATUS_CHOICES = (
+        ('complete', 'Complete'),
+        ('in_progress', 'In Progress'),
+        ('not_started', 'Not Started'),
+    )
+
+    status = models.CharField(choices=STATUS_CHOICES, max_length=16, blank=False, default="complete")
+
+    COLOR_CHOICES=(
+        ("#ffffff","Clear"),
+        ("#d11f2d","Red"),
+        ("#fef102","Yellow"),
+        ("#FF6500","Orange"),
+        ("#ed7696","Pink"),
+        ("#6f3728","Dark Brown"),
+        ("#bd955a","Light Brown"),
+        ("#00b2e2","Light Blue"),
+        ("#094080","Dark Blue"),
+        ("#01b703","Lime Green"),
+        ("#f2f2f2","White"),
+        ("#009ca8","Teal"),
+        ("#007a41","Dark Green"),
+        ("#000000","Black"),
+        ("#724c9f","Purple"),
+    )
+
+    color1 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
+    color2 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
     
     @property 
     def formatted_difficulty(self):

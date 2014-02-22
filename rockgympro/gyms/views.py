@@ -6,6 +6,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import CreateView
 from gyms.forms import RouteForm
+from django.core import urlresolvers
 
 class GymFinderMixin(SingleObjectMixin):
 
@@ -19,7 +20,7 @@ class GymFinderMixin(SingleObjectMixin):
 
     def get_context_data(self, **kwargs):
         context = super(GymFinderMixin, self).get_context_data(**kwargs)
-        context['gym'] = self.gym
+        context['gym'] = get_object_or_404(Gym, slug=self.kwargs['gym'])
         return context
 
 class GymPage(GymFinderMixin, DetailView):
@@ -28,11 +29,13 @@ class GymPage(GymFinderMixin, DetailView):
 
 class GymAdmin(GymFinderMixin):
 
-    def get_object(self, *args, **kwargs):
-        obj = super(GymAdmin, self).get_object(*args, **kwargs)
-        if self.request.user.is_anonymous() or (self.request.user.gym != obj and obj.owner != self.request.user):
+    def get(self, *args, **kwargs):
+        self.object = get_object_or_404(Gym, slug=self.kwargs['gym'])
+        self.gym = self.object
+        if self.request.user.is_anonymous() or (self.request.user.gym != self.gym and self.gym.owner != self.request.user):
             raise Http404 # maybe you'll need to write a middleware to catch 403's same way
-        return obj
+        return super(GymAdmin, self).get(*args, **kwargs)
+
 
 class RoutesPage(GymFinderMixin, ListView):
 
@@ -65,3 +68,11 @@ class GymAdminRouteAdd(GymAdmin, CreateView):
     template_name="gym_route_add.html"
     form_class = RouteForm
 
+    def get_form_kwargs(self):
+        kwargs = super(GymAdminRouteAdd, self).get_form_kwargs()
+        kwargs['gym'] = self.get_context_data()['gym']
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get_success_url(self):
+        return urlresolvers.reverse("gym_routes", kwargs=dict(gym=self.kwargs['gym']))

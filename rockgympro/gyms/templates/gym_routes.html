@@ -57,8 +57,8 @@
 							<tr onclick="document.location = '{%url 'gym_route' gym=gym.slug route=route.slug%}'">
 								{%if named_routes%}<td>{{route.name}}</td>{%endif%} 
 								<td class="align-center"> 
-									<div class="color-box"></div>
-									<div class="color-box"></div>
+									{%if route.color2 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color1}}"></div>{%endif%}
+									{%if route.color2 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color2}}"></div>{%endif%}
 								</td>
 								<td>{{route.formatted_difficulty}}</td> 
 								<td>{{route.location}}</td>

@@ -1,5 +1,6 @@
 {% extends "gym_frontend.html" %}
 {% load staticfiles %}
+{% load bootstrap3 %}
 {% block content %}
 <div id="content-container">
     <div class="row">
@@ -15,134 +16,41 @@
                     </h3>
 
                 </div> <!-- /.portlet-header -->
-                <form>
+                {{ form.non_field_errors }}
+                <form method="POST" action="">{%csrf_token%}
                     <div class="portlet-content">
                         <div class="row">
                             <div class="col-sm-3">
-                                <label>Route Type:</label>
-                                <div class="form-group">
-                                    <label class="radio-inline">
-                                        <input type="radio" name="route_type" id="route_type_boulder" value="boulder" checked>
-                                            Boulder
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="route_type" id="route_type_toprope" value="toprope">
-                                            Top Rope
-                                    </label>
-                                </div>
+                                {%bootstrap_field form.name%}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                {%bootstrap_field form.type%}
                             </div>
                             <div class="col-sm-4">
-                                <label for="select-input">Grade</label>
-                                <select id="route-grade" class="form-control">
-                                    <option>V0-</option>
-                                    <option>V0</option>
-                                    <option>V0+</option>
-                                    <option>V2-</option>
-                                    <option>V2</option>
-                                    <option>V2+</option>
-                                    <option>V3-</option>
-                                    <option>V3</option>
-                                    <option>V3+</option>
-                                    <option>V4-</option>
-                                    <option>V4</option>
-                                    <option>V4+</option>
-                                    <option>V5-</option>
-                                    <option>V5</option>
-                                    <option>V5+</option>
-                                    <option>V6-</option>
-                                    <option>V6</option>
-                                    <option>V6+</option>
-                                    <option>V7-</option>
-                                    <option>V7</option>
-                                    <option>V7+</option>
-                                    <option>V8-</option>
-                                    <option>V8</option>
-                                    <option>V8+</option>
-                                    <option>V9-</option>
-                                    <option>V9</option>
-                                    <option>V9+</option>
-                                    <option>V10-</option>
-                                    <option>V10</option>
-                                    <option>V10+</option>
-                                    <option>V11-</option>
-                                    <option>V11</option>
-                                    <option>V11+</option>
-                                    <option>V12-</option>
-                                    <option>V12</option>
-                                    <option>V12+</option>
-                                </select>
+                                {%bootstrap_field form.difficulty%}
                             </div>
                             <div class="col-sm-4">
                                 <label>Color(s)</label><br/>
-                                <select id="route-color" name="colorpicker" class="form-control">
-                                    <option value="#fffffe">Clear</option>
-                                    <option value="#d11f2d">Red</option>
-                                    <option value="#fef102">Yellow</option>
-                                    <option value="#FF6500">Orange</option>
-                                    <option value="#ed7696">Pink</option>
-                                    <option value="#6f3728">Dark Brown</option>
-                                    <option value="#bd955a">Light Brown</option>
-                                    <option value="#00b2e2">Light Blue</option>
-                                    <option value="#094080">Dark Blue</option>
-                                    <option value="#01b703">Lime Green</option>
-                                    <option value="#f2f2f2">White</option>
-                                    <option value="#009ca8">Teal</option>
-                                    <option value="#007a41">Dark Green</option>
-                                    <option value="#000000">Black</option>
-                                    <option value="#724c9f">Purple</option>
-                                </select>
-                                <select id="route-color2" name="colorpicker" class="form-control">
-                                    <option value="#fffffe">Clear</option>
-                                    <option value="#d11f2d">Red</option>
-                                    <option value="#fef102">Yellow</option>
-                                    <option value="#FF6500">Orange</option>
-                                    <option value="#ed7696">Pink</option>
-                                    <option value="#6f3728">Dark Brown</option>
-                                    <option value="#bd955a">Light Brown</option>
-                                    <option value="#00b2e2">Light Blue</option>
-                                    <option value="#094080">Dark Blue</option>
-                                    <option value="#01b703">Lime Green</option>
-                                    <option value="#f2f2f2">White</option>
-                                    <option value="#009ca8">Teal</option>
-                                    <option value="#007a41">Dark Green</option>
-                                    <option value="#000000">Black</option>
-                                    <option value="#724c9f">Purple</option>
-                                </select>
+                                {{form.color1}}
+                                {{form.color2}}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
-                                <label>Date Set</label>
-                                <div id="route-date-set" class="input-group date">
-                                    <input class="form-control" type="text">
-                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                </div>
+                                {% bootstrap_field form.date_set %}
                             </div>
                             <div class="col-sm-4">
-                                <label for="select-input">Setter</label>
-                                <select id="route-setter" class="form-control">
-                                    <option>Justin Hundley</option>
-                                    <option>Setter #2</option>
-                                </select>
+                                {% bootstrap_field form.setter %}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
-                                <label for="select-input">Location</label>
-                                <select id="route-setter" class="form-control">
-                                    <option>Back Wall</option>
-                                    <option>Back Top Out</option>
-                                    <option>Tunnel</option>
-                                    <option>Cave</option>
-                                </select>
+                                {%bootstrap_field form.location%}
                             </div>
                             <div class="col-sm-4">
-                                <label for="select-input">Status</label>
-                                <select id="route-setter" class="form-control">
-                                    <option>Complete</option>
-                                    <option>In Progress</option>
-                                    <option>Not Started</option>
-                                </select>
+                                {%bootstrap_field form.status%}
                             </div>
                         </div>
                         <div class="row">
@@ -157,14 +65,13 @@
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <label for="textarea-input">Notes</label>
-                                <textarea name="textarea-input" id="textarea-input" cols="10" rows="3" class="form-control"></textarea>
+                                {%bootstrap_field form.notes%}
                             </div>
                         </div> 
                         <div class="row">
                             <div class="col-sm-4">
-                                <button type="button" class="btn btn-primary">Save Route</button>
-                                <button type="button" class="btn btn-tertiary">Cancel</button>
+                                <input type="submit" class="btn btn-primary" value="Save Route"/>
+                                <a href="{%url 'gym_dashboard' gym=gym.slug%}" class="btn btn-tertiary">Cancel</a>
                             </div>
                         </div>
                     </div> <!-- /.portlet-content -->

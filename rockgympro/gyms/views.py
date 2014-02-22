@@ -4,6 +4,8 @@ from django.utils.timezone import now
 from django.http import Http404
 from django.views.generic import ListView, DetailView
 from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.edit import CreateView
+from gyms.forms import RouteForm
 
 class GymFinderMixin(SingleObjectMixin):
 
@@ -12,18 +14,19 @@ class GymFinderMixin(SingleObjectMixin):
 
     def get(self, request, *args, **kwargs):
         self.object = get_object_or_404(Gym, slug=self.kwargs['gym'])
+        self.gym = self.object
         return super(GymFinderMixin, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(GymFinderMixin, self).get_context_data(**kwargs)
-        context['gym'] = self.object
+        context['gym'] = self.gym
         return context
 
 class GymPage(GymFinderMixin, DetailView):
 
     template_name="gym_page.html"
 
-class GymAdmin(GymPage):
+class GymAdmin(GymFinderMixin):
 
     def get_object(self, *args, **kwargs):
         obj = super(GymAdmin, self).get_object(*args, **kwargs)
@@ -53,10 +56,12 @@ class RoutePage(GymPage):
         context['route'] = get_object_or_404(self.object.routes, slug=self.kwargs['route'])
         return context
 
-class GymDashboard(GymAdmin):
+class GymDashboard(GymAdmin, DetailView):
 
     template_name="gym_dashboard.html"
 
-class GymAdminRouteAdd(GymAdmin):
+class GymAdminRouteAdd(GymAdmin, CreateView):
 
-	template_name="gym_route_add.html"
+    template_name="gym_route_add.html"
+    form_class = RouteForm
+

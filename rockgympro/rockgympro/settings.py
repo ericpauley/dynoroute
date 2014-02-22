@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'gyms',
     'users',
+    'bootstrap3',
 )
 
 AUTH_USER_MODEL = "users.User"

@@ -13,7 +13,7 @@
 	
 	<ul id="main-nav" class="open-active">			
 
-		<li {%if request.resolver_match.url_name == "gym_dashbaord"%}class="active"{%endif%}>				
+		<li {%if request.resolver_match.url_name == "gym_dashboard"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_dashboard' gym=gym.slug%}">
 				<i class="fa fa-dashboard"></i>
 				Dashboard

@@ -66,6 +66,7 @@ class GymAdminRouteAdd(GymFinderMixin, CreateView):
     perms = 1000
 
     form_class = RouteForm
+    template_name="gyms/route_form.html"
 
     def get_form_kwargs(self):
         kwargs = super(GymAdminRouteAdd, self).get_form_kwargs()

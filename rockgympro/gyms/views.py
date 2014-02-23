@@ -4,51 +4,47 @@ from django.utils.timezone import now
 from django.http import Http404
 from django.views.generic import ListView, DetailView
 from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.edit import CreateView
-from gyms.forms import RouteForm
+from django.views.generic.edit import CreateView, UpdateView
+from gyms.forms import RouteForm, GymSettingsForm
 from django.core import urlresolvers
+from django import shortcuts
+from django.utils.http import urlquote
 
 class GymFinderMixin(SingleObjectMixin):
 
     model = Gym
     slug_url_kwarg = "gym"
+    context_object_name="gym"
+    perms = 0
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.object = get_object_or_404(Gym, slug=self.kwargs['gym'])
         self.gym = self.object
-        return super(GymFinderMixin, self).get(request, *args, **kwargs)
+        if self.perms > 0:
+            if request.user.is_anonymous():
+                return shortcuts.redirect("%s?next=%s" % (urlresolvers.reverse("login"), urlquote(request.path)))
+            elif not (self.gym.owner == request.user or (request.user.gym == self.gym and request.user.level >= self.perms)):
+                raise Http404()
+        return super(GymFinderMixin, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(GymFinderMixin, self).get_context_data(**kwargs)
-        context['gym'] = get_object_or_404(Gym, slug=self.kwargs['gym'])
+        context['gym'] = self.gym
         return context
+
+    def get_object(self):
+        return get_object_or_404(Gym, slug=self.kwargs['gym'])
 
 class GymPage(GymFinderMixin, DetailView):
 
     template_name="gym_page.html"
 
-class GymAdmin(GymFinderMixin):
-
-    def get(self, *args, **kwargs):
-        self.object = get_object_or_404(Gym, slug=self.kwargs['gym'])
-        self.gym = self.object
-        if self.request.user.is_anonymous() or (self.request.user.gym != self.gym and self.gym.owner != self.request.user):
-            raise Http404 # maybe you'll need to write a middleware to catch 403's same way
-        return super(GymAdmin, self).get(*args, **kwargs)
-
-
 class RoutesPage(GymFinderMixin, ListView):
 
-    paginate_by = 2
     template_name = "gym_routes.html"
 
     def get_queryset(self):
         return self.object.routes.all()
-
-    def get_context_data(self, **kwargs):
-        context = super(RoutesPage, self).get_context_data(**kwargs)
-        context['named_routes'] = self.object.routes.exclude(name="").count()
-        return context
 
 class RoutePage(GymPage):
 
@@ -59,20 +55,60 @@ class RoutePage(GymPage):
         context['route'] = get_object_or_404(self.object.routes, slug=self.kwargs['route'])
         return context
 
-class GymDashboard(GymAdmin, DetailView):
+class GymDashboard(GymPage):
+
+    perms = 500
 
     template_name="gym_dashboard.html"
 
-class GymAdminRouteAdd(GymAdmin, CreateView):
+class GymAdminRouteAdd(GymFinderMixin, CreateView):
 
-    template_name="gym_route_add.html"
+    perms = 1000
+
     form_class = RouteForm
 
     def get_form_kwargs(self):
         kwargs = super(GymAdminRouteAdd, self).get_form_kwargs()
-        kwargs['gym'] = self.get_context_data()['gym']
+        kwargs['gym'] = self.gym
         kwargs['user'] = self.request.user
         return kwargs
 
     def get_success_url(self):
         return urlresolvers.reverse("gym_routes", kwargs=dict(gym=self.kwargs['gym']))
+
+class GymAdminRouteEdit(GymFinderMixin, UpdateView):
+
+    perms = 1000
+    template_name_suffix = '_update_form'
+
+    form_class = RouteForm
+
+    def get_form_kwargs(self):
+        kwargs = super(GymAdminRouteEdit, self).get_form_kwargs()
+        kwargs['gym'] = self.gym
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get_object(self):
+        route = get_object_or_404(Route, slug=self.kwargs['route'])
+        if route.gym != self.gym:
+            raise Http404
+        return route
+
+    def get_success_url(self):
+        return urlresolvers.reverse("gym_routes", kwargs=dict(gym=self.kwargs['gym']))
+
+class GymSettings(UpdateView):
+
+    perms = 100000
+    
+    template_name="gym_settings.html"
+    form_class = GymSettingsForm
+    model = Gym
+    slug_url_kwarg = "gym"
+
+    def get_success_url(self):
+        return urlresolvers.reverse("gym_dashboard", kwargs=dict(gym=self.kwargs['gym']))
+
+def redirect(request, to, *args, **kwargs):
+    return shortcuts.redirect(to, *args, **kwargs)

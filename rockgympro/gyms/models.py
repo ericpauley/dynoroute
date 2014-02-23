@@ -30,6 +30,9 @@ class Gym(DatedMixin):
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Membership', related_name="gyms")
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="owned_gyms")
 
+    locations = models.TextField(blank=True)
+    named_routes = models.BooleanField(default=False)
+
     def __unicode__(self):
         return self.name 
 
@@ -46,26 +49,26 @@ class Route(DatedMixin, SluggedMixin):
         ('bouldering', 'Bouldering')
     )
 
-    RATING_CHOICES = (
+    GRADE_CHOICES = (
         ('Top Rope', []),
         ('Bouldering', []),
     )
 
     for i in range(5,16):
         if i > 9:
-            RATING_CHOICES[0][1].append((i-.25, "5.%s-" % i))
-        RATING_CHOICES[0][1].append((i, "5.%s" % i))
+            GRADE_CHOICES[0][1].append((i-.25, "5.%s-" % i))
+        GRADE_CHOICES[0][1].append((i, "5.%s" % i))
         if i >= 9:
-            RATING_CHOICES[0][1].append((i+.25, "5.%s+" % i))
+            GRADE_CHOICES[0][1].append((i+.25, "5.%s+" % i))
 
     for i in range(0,14):
-        RATING_CHOICES[1][1].append((i-.25, "V%s-" % i))
-        RATING_CHOICES[1][1].append((i, "V%s" % i))
-        RATING_CHOICES[1][1].append((i+.25, "V%s+" % i))
+        GRADE_CHOICES[1][1].append((1000+i-.25, "V%s-" % i))
+        GRADE_CHOICES[1][1].append((1000+i, "V%s" % i))
+        GRADE_CHOICES[1][1].append((1000+i+.25, "V%s+" % i))
 
     type = models.CharField(choices=TYPE_CHOICES, max_length=16, blank=False, default="bouldering")
-    difficulty = models.FloatField(choices=RATING_CHOICES, blank=False)
-    setter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='routes')
+    grade = models.FloatField(choices=GRADE_CHOICES, blank=False)
+    setter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='routes', blank=True, null=True)
     location = models.CharField(max_length=32)
     date_set = models.DateField(default=timezone.now())
     date_torn = models.DateField(blank=True, null=True)
@@ -100,8 +103,3 @@ class Route(DatedMixin, SluggedMixin):
 
     color1 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
     color2 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
-    
-    @property 
-    def formatted_difficulty(self):
-        routeType = dict(Route.TYPE_CHOICES)[self.type]
-        return dict(dict(Route.RATING_CHOICES)[routeType])[self.difficulty]

@@ -1,4 +1,4 @@
-{% extends "gym_frontend.html" %}
+{% extends "gym_backend.html" %}
 {% load staticfiles %}
 {% load bootstrap3 %}
 {% block content %}
@@ -12,24 +12,26 @@
                 <div class="portlet-header">
 
                     <h3>
-                        Add New Route
+                        {%block title%}Add New Route{%endblock%}
                     </h3>
 
                 </div> <!-- /.portlet-header -->
                 {{ form.non_field_errors }}
                 <form method="POST" action="">{%csrf_token%}
                     <div class="portlet-content">
+                        {%if gym.named_routes%}
                         <div class="row">
                             <div class="col-sm-3">
                                 {%bootstrap_field form.name%}
                             </div>
                         </div>
+                        {%endif%}
                         <div class="row">
                             <div class="col-sm-3">
                                 {%bootstrap_field form.type%}
                             </div>
                             <div class="col-sm-4">
-                                {%bootstrap_field form.difficulty%}
+                                {%bootstrap_field form.grade%}
                             </div>
                             <div class="col-sm-4">
                                 <label>Color(s)</label><br/>

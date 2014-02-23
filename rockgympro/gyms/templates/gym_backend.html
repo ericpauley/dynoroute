@@ -25,6 +25,14 @@
 				Routes
 			</a>				
 		</li>
+		{%if gym.owner = user%}
+		<li {%if request.resolver_match.url_name == "gym_settings"%}class="active"{%endif%}>				
+			<a href="{%url 'gym_settings' gym=gym.slug%}">
+				<i class="fa fa-briefcase"></i>
+				Gym Settings
+			</a>				
+		</li>
+		{%endif%}
 		<li>				
 			<a href="{%url 'gym_page' gym=gym.slug%}">
 				<i class="fa fa-sign-out"></i>

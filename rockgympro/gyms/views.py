@@ -71,7 +71,7 @@ class RoutesPage(GymFinderMixin, ListView):
     template_name = "gym_routes.html"
 
     def get_queryset(self):
-        return self.object.routes.all()
+        return self.object.routes.filter(status="complete")
 
 class RoutePage(GymPage):
 
@@ -88,7 +88,14 @@ class GymDashboard(GymPage):
 
     template_name="gym_dashboard.html"
 
-class GymStats(JSONResponseMixin, GymDashboard):
+    def get_context_data(self, **kwargs):
+        context = super(GymDashboard, self).get_context_data(**kwargs)
+        context['routes'] = self.gym.routes.order_by("-created")[:5]
+        return context
+
+class GymStats(JSONResponseMixin, GymFinderMixin, DetailView):
+
+    perms = 500
 
     def split(self, d):
         return [dict(label=k, data=v) for k,v in d.items()]

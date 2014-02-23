@@ -43,7 +43,7 @@
 							<table id="user-signups" class="table table-striped table-checkable"> 
 								<thead> 
 									<tr> 
-										<th class="align-center">Edit</th> 
+										{%if user.perms >= 1000 or gym.owner == user%}<th class="align-center">Edit</th> {%endif%}
 										<th class="align-center">Color</th> 
 										<th>Rating</th> 
 										<th>Location</th>
@@ -53,78 +53,29 @@
 								</thead> 
 
 								<tbody> 
+									{%for route in routes%}
 									<tr class=""> 
-										<td class="align-center">
-											<a href="javascript:void(0);" class="btn btn-xs btn-primary" data-original-title="Approve">
+										{%if user.perms >= 1000 or gym.owner == user%}<td class="align-center">
+											<a href="{%url 'gym_route_edit' gym=gym.slug route=route.slug%}" class="btn btn-xs btn-primary" data-original-title="Approve">
 												<i class="fa fa-pencil"></i>
 											</a> 
-										</td> 
+										</td> {%endif%}
 										<td class="align-center"> 
-											<div class="color-box"></div>
-											<div class="color-box"></div>
+											{%if route.color1 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color1}}"></div>{%endif%}
+									{%if route.color2 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color2}}"></div>{%endif%}
 										</td>
-										<td>V6</td> 
-										<td>Back Wall</td>
-										<td>JH</td>
+										<td>{{route.get_grade_display}}</td> 
+										<td>{{route.location}}</td>
+										<td>{%if route.setter%}{{route.setter.initials}}{%endif%}</td>
+										{%if route.status == "complete"%}
 										<td class="hidden-md"><span class="label label-success">Complete</span></td> 
+										{%elif route.status == "in_progress"%}
+										<td class="hidden-md"><span class="label label-warning">In progress</span></td>
+										{%else%}
+										<td class="hidden-md"><span class="label label-default">Not Started</span></td>
+										{%endif%}
 									</tr> 
-									<tr class="">
-										<td class="align-center">
-											<a href="javascript:void(0);" class="btn btn-xs btn-primary" data-original-title="Approve">
-												<i class="fa fa-pencil"></i>
-											</a> 
-										</td>
-										<td class="align-center">
-											<div class="color-box"></div>
-										</td>
-										<td>V6</td> 
-										<td>Back Wall</td>
-										<td>JH</td>
-										<td class="hidden-md"><span class="label label-default">Incomplete</span>
-										</td>
-									</tr>
-									<tr class=""> 
-										<td class="align-center">
-											<a href="javascript:void(0);" class="btn btn-xs btn-primary" data-original-title="Approve">
-												<i class="fa fa-pencil"></i>
-											</a> 
-										</td>
-										<td class="align-center">  
-											<div class="color-box"></div>
-										</td>
-										<td>V6</td> 
-										<td>Back Wall</td>
-										<td>JH</td>
-										<td class="hidden-md"><span class="label label-success">Complete</span></td>
-									</tr> 
-									<tr class="">
-										<td class="align-center">
-											<a href="javascript:void(0);" class="btn btn-xs btn-primary" data-original-title="Approve">
-												<i class="fa fa-pencil"></i>
-											</a> 
-										</td> 
-										<td class="align-center">  
-											<div class="color-box"></div>
-										</td>
-										<td>V6</td> 
-										<td>Back Wall</td>
-										<td>JH</td>
-										<td class="hidden-md"><span class="label label-success">Complete</span></td>					
-									</tr> 
-									<tr class="">
-										<td class="align-center">
-											<a href="javascript:void(0);" class="btn btn-xs btn-primary" data-original-title="Approve">
-												<i class="fa fa-pencil"></i>
-											</a> 
-										</td> 
-										<td class="align-center"> 
-											<div class="color-box"></div>
-										</td>
-										<td>V6</td> 
-										<td>Back Wall</td>
-										<td>JH</td>
-										<td class="hidden-md"><span class="label label-success">Complete</span></td> 
-									</tr>
+									{%endfor%}
 									
 								</tbody> 
 							</table>

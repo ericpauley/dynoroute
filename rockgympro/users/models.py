@@ -17,4 +17,4 @@ class User(AbstractUser):
             self.level = 500
 
     def initials(self):
-        return "%s %s" % (self.first_name[:1].upper(), self.last_name[:1].upper())
+        return "%s%s" % (self.first_name[:1].upper(), self.last_name[:1].upper())

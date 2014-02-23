@@ -25,6 +25,12 @@
 				Routes
 			</a>				
 		</li>
+		<li {%if request.resolver_match.url_name == "gym_route_add"%}class="active"{%endif%}>				
+			<a href="{%url 'gym_route_add' gym=gym.slug%}">
+				<i class="fa fa-briefcase"></i>
+				Add Route
+			</a>				
+		</li>
 		{%if gym.owner = user%}
 		<li {%if request.resolver_match.url_name == "gym_settings"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_settings' gym=gym.slug%}">

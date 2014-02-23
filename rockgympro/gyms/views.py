@@ -90,13 +90,16 @@ class GymDashboard(GymPage):
 
 class GymStats(JSONResponseMixin, GymDashboard):
 
+    def split(self, d):
+        return [dict(label=k, data=v) for k,v in d.items()]
+
     def get_context_data(self, **kwargs):
         context = {}
-        context['top_rope_grades'] = dict([(x[1],0) for x in Route.GRADE_CHOICES[0][1]] + self.gym.grades(type="top_rope").items())
-        context['bouldering_grades'] = dict([(x[1],0) for x in Route.GRADE_CHOICES[1][1]] + self.gym.grades(type="bouldering").items())
-        context['types'] = self.gym.types()
-        context['setters'] = self.gym.setters()
-        context['locations'] = self.gym.locations()
+        context['top_rope_grades'] = self.split(dict([(x[1],0) for x in Route.GRADE_CHOICES[0][1]] + self.gym.grades(type="top_rope").items()))
+        context['bouldering_grades'] = self.split(dict([(x[1],0) for x in Route.GRADE_CHOICES[1][1]] + self.gym.grades(type="bouldering").items()))
+        context['types'] = self.split(self.gym.types())
+        context['setters'] = self.split(self.gym.setters())
+        context['locations'] = self.split(self.gym.locations())
         return context
 
 class GymAdminRouteAdd(GymFinderMixin, CreateView):

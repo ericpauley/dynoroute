@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.db.models import Count
 from collections import OrderedDict
 from decimal import Decimal
+from django.contrib.auth import get_user_model
 
 class DatedMixin(models.Model):
 
@@ -65,16 +66,26 @@ class Gym(DatedMixin):
         return self._live_routes
 
     def types(self):
-        return OrderedDict([(Route(type=x['type']).get_type_display(),x['count']*1.0/self.num_live_routes) for x in self.live_routes.values('type').annotate(count=Count("slug"))])
+        d = OrderedDict([(Route(type=x['type']).get_type_display(),x['count']*1.0) for x in self.live_routes.values('type').annotate(count=Count("slug"))])
+        return d if len(d) > 1 else {}
+
+    def bouldering_grades(self):
+        return self.grades(type="bouldering")
+
+    def top_rope_grades(self):
+        return self.grades(type="top_rope")
 
     def grades(self, **kwargs):
-        return OrderedDict([(x['grade'],x['count']*1.0/self.num_live_routes) for x in self.live_routes.filter(**kwargs).values('grade').annotate(count=Count("slug"))])
+        d = OrderedDict([(x['grade'],x['count']*1.0) for x in self.live_routes.filter(**kwargs).values('grade').annotate(count=Count("slug"))])
+        return d if len(d) > 1 else {}
 
     def setters(self):
-        return {x['setter'].get_full_name() if x['setter'] else 'Unknown':x['count']*1.0/self.num_live_routes for x in self.live_routes.values('setter').annotate(count=Count('slug')).select_related('setter')}
+        d = {get_user_model().objects.get(id=x['setter']).get_full_name() or get_user_model().objects.get(id=x['setter']).username if x['setter'] else 'Unknown':x['count']*1.0 for x in self.live_routes.values('setter').annotate(count=Count('slug'))}
+        return d if len(d) > 1 else {}
 
     def locations(self):
-        return {x['location']:x['count']*1.0/self.num_live_routes for x in self.live_routes.values('location').annotate(count=Count('slug'))}
+        d = {x['location']:x['count']*1.0 for x in self.live_routes.values('location').annotate(count=Count('slug'))}
+        return d if len(d) > 1 else {}
 
 class Membership(DatedMixin):
 

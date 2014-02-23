@@ -2,40 +2,6 @@
 {% load staticfiles %}
 {% block content %}
 <div id="content-container">
-	<div class="row visible-xs">
-
-		<div class="col-md-3 col-sm-6">
-
-			<a href="#" class="dash-btn-red">
-				Add Route
-			</a> <!-- /.dashboard-btn -->
-
-		</div> <!-- /.col-md-3 -->
-		
-		<div class="col-md-3 col-sm-6">
-
-			<a href="#" class="dash-btn-yellow">
-				View Routes
-			</a> <!-- /.dashboard-btn -->
-
-		</div> <!-- /.col-md-3 -->
-
-		<div class="col-md-3 col-sm-6">
-
-			<a href="#" class="dash-btn-blue">
-				Settings
-			</a> <!-- /.dashboard-btn -->
-
-		</div> <!-- /.col-md-3 -->
-		<div class="col-md-3 col-sm-6">
-
-			<a href="#" class="dash-btn-gray">
-				Logout
-			</a> <!-- /.dashboard-btn -->
-
-		</div> <!-- /.col-md-3 -->
-
-	</div> <!-- /.row -->
 
 	<div class="row">
 
@@ -169,27 +135,101 @@
 
 			</div> <!-- /.col-md-6 -->
 
-			<div class="col-md-6">
+				<div class="col-md-6">
 
-				<div class="portlet">
+					<div class="portlet">
 
-					<div class="portlet-header">
+						<div class="portlet-header">
 
-						<h3>
-							<i class="fa fa-calendar"></i>
-							Full Calendar
-						</h3>
+							<h3>
+								<i class="fa fa-bar-chart-o"></i>
+								Donut Chart
+							</h3>
 
-					</div> <!-- /.portlet-header -->
+						</div> <!-- /.portlet-header -->
 
-					<div class="portlet-content">
+						<div class="portlet-content">
 
-						<div id="full-calendar"></div>
+							<div id="donut-chart" class="chart-holder"></div>							
 
-					</div> <!-- /.portlet-content -->
+						</div> <!-- /.portlet-content -->
 
-				</div> <!-- /.portlet -->
-			</div> <!-- /.col-md-6 -->
+					</div> <!-- /.portlet -->
+
+				</div> <!-- /.col -->
+			</div> <!-- /row -->
+			<div class="row">
+
+				<div class="col-md-6">
+
+					<div class="portlet">
+
+						<div class="portlet-header">
+
+							<h3>
+								<i class="fa fa-bar-chart-o"></i>
+								Donut Chart
+							</h3>
+
+						</div> <!-- /.portlet-header -->
+
+						<div class="portlet-content">
+
+							<div id="donut-chart" class="chart-holder"></div>							
+
+						</div> <!-- /.portlet-content -->
+
+					</div> <!-- /.portlet -->
+
+				</div> <!-- /.col -->
+
+				<div class="col-md-6">
+
+					<div class="portlet">
+
+						<div class="portlet-header">
+
+							<h3>
+								<i class="fa fa-bar-chart-o"></i>
+								Pie Chart
+							</h3>
+
+						</div> <!-- /.portlet-header -->
+
+						<div class="portlet-content">
+
+							<div id="pie-chart" class="chart-holder"></div>							
+
+						</div> <!-- /.portlet-content -->
+
+					</div> <!-- /.portlet -->
+
+				</div> <!-- /.col -->
+			</div>
+			<div class="row">
+			
+				<div class="col-md-6">
+
+					<div class="portlet">
+
+						<div class="portlet-header">
+
+							<h3>
+								<i class="fa fa-bar-chart-o"></i>
+								Vertical Bar Chart
+							</h3>
+
+						</div> <!-- /.portlet-header -->
+
+						<div class="portlet-content">
+
+							<div id="vertical-chart" class="chart-holder"></div>							
+						</div> <!-- /.portlet-content -->
+
+					</div> <!-- /.portlet -->
+
+				</div> <!-- /.col -->
+
 			</div> <!-- /.row -->
 
 		</div> <!-- /.col-md-12 -->

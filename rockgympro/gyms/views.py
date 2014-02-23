@@ -95,8 +95,14 @@ class GymStats(JSONResponseMixin, GymDashboard):
 
     def get_context_data(self, **kwargs):
         context = {}
-        context['top_rope_grades'] = self.split(dict([(x[1],0) for x in Route.GRADE_CHOICES[0][1]] + self.gym.grades(type="top_rope").items()))
-        context['bouldering_grades'] = self.split(dict([(x[1],0) for x in Route.GRADE_CHOICES[1][1]] + self.gym.grades(type="bouldering").items()))
+        d = {}
+        for k,v in self.gym.grades(type="top_rope").items():
+            d[round(k)] = d.get(round(k), 0)+v
+        context['top_rope_grades'] = self.split({Route(grade=k).get_grade_display():v for k,v in d.items()})
+        d = {}
+        for k,v in self.gym.grades(type="bouldering").items():
+            d[round(k)] = d.get(round(k), 0)+v
+        context['bouldering_grades'] = self.split({Route(grade=k).get_grade_display():v for k,v in d.items()})
         context['types'] = self.split(self.gym.types())
         context['setters'] = self.split(self.gym.setters())
         context['locations'] = self.split(self.gym.locations())

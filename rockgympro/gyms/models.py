@@ -68,7 +68,7 @@ class Gym(DatedMixin):
         return OrderedDict([(Route(type=x['type']).get_type_display(),x['count']*1.0/self.num_live_routes) for x in self.live_routes.values('type').annotate(count=Count("slug"))])
 
     def grades(self, **kwargs):
-        return OrderedDict([(Route(grade=x['grade']).get_grade_display(),x['count']*1.0/self.num_live_routes) for x in self.live_routes.filter(**kwargs).values('grade').annotate(count=Count("slug"))])
+        return OrderedDict([(x['grade'],x['count']*1.0/self.num_live_routes) for x in self.live_routes.filter(**kwargs).values('grade').annotate(count=Count("slug"))])
 
     def setters(self):
         return {x['setter'].get_full_name() if x['setter'] else 'Unknown':x['count']*1.0/self.num_live_routes for x in self.live_routes.values('setter').annotate(count=Count('slug')).select_related('setter')}

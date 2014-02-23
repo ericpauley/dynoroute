@@ -4,6 +4,7 @@ import random
 from django.utils import timezone
 from django.db.models import Count
 from collections import OrderedDict
+from decimal import Decimal
 
 class DatedMixin(models.Model):
 
@@ -95,24 +96,25 @@ class Route(DatedMixin, SluggedMixin):
 
     for i in range(5,16):
         if i > 9:
-            GRADE_CHOICES[0][1].append((i-.25, "5.%s-" % i))
-        GRADE_CHOICES[0][1].append((i, "5.%s" % i))
+            GRADE_CHOICES[0][1].append((Decimal(i-.25), "5.%s-" % i))
+        GRADE_CHOICES[0][1].append((Decimal(i), "5.%s" % i))
         if i >= 9:
-            GRADE_CHOICES[0][1].append((i+.25, "5.%s+" % i))
+            GRADE_CHOICES[0][1].append((Decimal(i+.25), "5.%s+" % i))
 
     for i in range(0,14):
-        GRADE_CHOICES[1][1].append((1000+i-.25, "V%s-" % i))
-        GRADE_CHOICES[1][1].append((1000+i, "V%s" % i))
-        GRADE_CHOICES[1][1].append((1000+i+.25, "V%s+" % i))
+        GRADE_CHOICES[1][1].append((Decimal(1000+i-.25), "V%s-" % i))
+        GRADE_CHOICES[1][1].append((Decimal(1000+i), "V%s" % i))
+        GRADE_CHOICES[1][1].append((Decimal(1000+i+.25), "V%s+" % i))
 
     type = models.CharField(choices=TYPE_CHOICES, max_length=16, blank=False, default="bouldering")
-    grade = models.FloatField(choices=GRADE_CHOICES, blank=False)
+    grade = models.DecimalField(choices=GRADE_CHOICES, blank=False, max_digits=10, decimal_places=2)
     setter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='routes', blank=True, null=True)
     location = models.CharField(max_length=32)
     date_set = models.DateField(default=timezone.now())
     date_torn = models.DateField(blank=True, null=True)
     gym = models.ForeignKey(Gym, related_name='routes')
     notes = models.TextField(blank=True)
+    image = models.ImageField(blank=True, upload_to="route_images")
 
     STATUS_CHOICES = (
         ('complete', 'Complete'),

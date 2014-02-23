@@ -23,12 +23,13 @@ class RouteForm(ModelForm):
             self.fields['setter'].initial = user
 
     class Meta:
-        fields = ['type', 'grade', 'location', 'date_set', 'setter', 'name', 'notes', 'status', 'color1', 'color2']
+        fields = ['type', 'image', 'grade', 'location', 'date_set', 'setter', 'name', 'notes', 'status', 'color1', 'color2']
         model = Route
         widgets = {
         'notes': forms.Textarea(attrs={'rows':3, 'cols':10}),
         'color1': forms.Select(attrs=dict(id="route-color")),
         'color2': forms.Select(attrs=dict(id="route-color2")),
+        'image': forms.FileInput(),
         'date_set': forms.DateInput(attrs=dict(id="route-date-set"), format="%m/%d/%Y"),
         'type': forms.RadioSelect(),
         }

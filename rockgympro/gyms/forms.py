@@ -17,7 +17,7 @@ class RouteForm(ModelForm):
         self.fields['date_set'].initial = timezone.now()
         self.fields['status'].initial = 'complete'
         self.fields['type'].initial = 'bouldering'
-        self.fields['location'].choices = tuple([(x.strip(),x.strip()) for x in gym.locations.split('\n')])
+        self.fields['location'].choices = tuple([(x.strip(),x.strip()) for x in gym.location_options.split('\n')])
         self.instance.gym = gym
         if user.gym == gym:
             self.fields['setter'].initial = user
@@ -36,5 +36,5 @@ class RouteForm(ModelForm):
 class GymSettingsForm(ModelForm):
 
     class Meta:
-        fields = ['name', 'named_routes', 'locations']
+        fields = ['name', 'named_routes', 'location_options']
         model=Gym

@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 import random
 from django.utils import timezone
+from django.db.models import Count
+from collections import OrderedDict
 
 class DatedMixin(models.Model):
 
@@ -24,17 +26,54 @@ class SluggedMixin(models.Model):
     class Meta:
         abstract = True
 
+class GymManager(models.Manager):
+
+    def get_query_set(self):
+        return super(GymManager, self).get_query_set()
+
 class Gym(DatedMixin):
+
+    objects = GymManager()
+
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=32)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Membership', related_name="gyms")
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="owned_gyms")
 
-    locations = models.TextField(blank=True)
+    location_options = models.TextField(blank=True)
     named_routes = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.name 
+        return self.name
+
+    @property
+    def num_live_routes(self):
+        try:
+            self._num_live_routes
+        except AttributeError:
+            self._num_live_routes = self.live_routes.count()
+        return self._num_live_routes
+
+    @property
+    def live_routes(self):
+        try:
+            self._live_routes
+        except AttributeError:
+            print "blegh"
+            self._live_routes = self.routes.filter(status="complete").exclude(date_torn__lte=timezone.now())
+        return self._live_routes
+
+    def types(self):
+        return OrderedDict([(x['type'],x['count']*1.0/self.num_live_routes) for x in self.live_routes.values('type').annotate(count=Count("slug"))])
+
+    def grades(self):
+        return OrderedDict([(Route(grade=x['grade']).get_grade_display(),x['count']*1.0/self.num_live_routes) for x in self.live_routes.values('grade').annotate(count=Count("slug"))])
+
+    def setters(self):
+        return {x['setter']:x['count']*1.0/self.num_live_routes for x in self.live_routes.values('setter').annotate(count=Count('slug')).select_related('setter')}
+
+    def locations(self):
+        return {x['setter']:x['count']*1.0/self.num_live_routes for x in self.live_routes.values('location').annotate(count=Count('slug'))}
 
 class Membership(DatedMixin):
 

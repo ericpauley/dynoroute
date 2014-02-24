@@ -1,5 +1,13 @@
 {%extends 'base.html'%}
+{% load staticfiles %}
 {%load gym_extras %}
+{%block logo%}
+<h1 id="site-logo">
+	<a href="/grg/admin">
+		<img src="{% static 'img/logos/grg_logo.png' %}" alt="Site Logo" width="195" height="40" />
+	</a>
+</h1>
+{%endblock%}
 {%block sidebar%}
 <div id="search">
 	<form>
@@ -20,21 +28,21 @@
 			</a>				
 		</li>
 		<li {%if request.resolver_match.url_name == "gym_routes"%}class="active"{%endif%}>				
-			<a href="{%url 'gym_routes' gym=gym.slug%}">
+			<a href="{%url 'gym_routes_admin' gym=gym.slug%}">
 				<i class="fa fa-briefcase"></i>
 				Routes
 			</a>				
 		</li>
 		<li {%if request.resolver_match.url_name == "gym_route_add"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_route_add' gym=gym.slug%}">
-				<i class="fa fa-briefcase"></i>
+				<i class="fa fa-plus"></i>
 				Add Route
 			</a>				
 		</li>
 		{%if gym.owner = user%}
 		<li {%if request.resolver_match.url_name == "gym_settings"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_settings' gym=gym.slug%}">
-				<i class="fa fa-briefcase"></i>
+				<i class="fa fa-cogs"></i>
 				Gym Settings
 			</a>				
 		</li>

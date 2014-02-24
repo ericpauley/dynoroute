@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib import auth
 
 def home(request):
-    return render(request, "dashboard.html")
+    return render(request, "home.html")
 
 def signup(request):
     pass

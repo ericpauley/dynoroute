@@ -1,5 +1,13 @@
 {%extends 'base.html'%}
 {%load gym_extras %}
+{%load staticfiles%}
+{%block logo%}
+<h1 id="site-logo">
+	<a href="/grg">
+		<img src="{% static 'img/logos/grg_logo.png' %}" alt="Site Logo" width="195" height="40" />
+	</a>
+</h1>
+{%endblock%}
 {%block sidebar%}
 <div id="search">
 	<form>
@@ -15,7 +23,7 @@
 
 		<li {%if request.resolver_match.url_name == "gym_page"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_page' gym=gym.slug%}">
-				<i class="fa fa-dashboard"></i>
+				<i class="fa fa-building-o"></i>
 				{{gym.name}}
 			</a>				
 		</li>
@@ -28,7 +36,7 @@
 		{%if user.gym == gym or gym.owner == user%}
 		<li>				
 			<a href="{%url 'gym_dashboard' gym=gym.slug%}">
-				<i class="fa fa-sign-out"></i>
+				<i class="fa fa-sign-in"></i>
 				Admin
 			</a>				
 		</li>

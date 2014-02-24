@@ -35,11 +35,13 @@
 <div id="wrapper">
 	<header id="header">
 
+		{%block logo%}
 		<h1 id="site-logo">
-			<a href="{% static 'index.html">
+			<a href="/">
 				<img src="{% static 'img/logos/logo.png' %}" alt="Site Logo" />
 			</a>
-		</h1>	
+		</h1>
+		{%endblock%}	
 
 		<a href="javascript:;" data-toggle="collapse" data-target=".top-bar-collapse" id="top-bar-toggle" class="navbar-toggle collapsed">
 			<i class="fa fa-cog"></i>

@@ -73,6 +73,13 @@ class RoutesPage(GymFinderMixin, ListView):
     def get_queryset(self):
         return self.object.routes.filter(status="complete")
 
+class AdminRoutesPage(GymFinderMixin, ListView):
+
+    template_name = "gym_routes_admin.html"
+
+    def get_queryset(self):
+        return self.object.routes.all()
+
 class RoutePage(GymPage):
 
     template_name = "gym_route.html"

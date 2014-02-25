@@ -33,9 +33,9 @@
 				Routes
 			</a>				
 		</li>
-		{%if user.gym == gym or gym.owner == user%}
+		{%if user.gym%}
 		<li>				
-			<a href="{%url 'gym_dashboard' gym=gym.slug%}">
+			<a href="{%url 'gym_dashboard' gym=user.gym.slug%}">
 				<i class="fa fa-sign-in"></i>
 				Admin
 			</a>				

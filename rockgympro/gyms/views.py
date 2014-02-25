@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
-from gyms.models import Gym, Route
+from gyms.models import Gym, Route, Send, Favorite
 from django.utils.timezone import now
 from django.http import Http404
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, View
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
 from gyms.forms import RouteForm, GymSettingsForm
@@ -11,21 +11,22 @@ from django import shortcuts
 from django.utils.http import urlquote
 import json
 from django.http import HttpResponse
+from django.db import IntegrityError
 
 class GymFinderMixin(SingleObjectMixin):
 
     model = Gym
     slug_url_kwarg = "gym"
     context_object_name="gym"
-    perms = 0
+    perms = None
 
     def dispatch(self, request, *args, **kwargs):
         self.object = get_object_or_404(Gym, slug=self.kwargs['gym'])
         self.gym = self.object
-        if self.perms > 0:
+        if self.perms is not None:
             if request.user.is_anonymous():
                 return shortcuts.redirect("%s?next=%s" % (urlresolvers.reverse("login"), urlquote(request.path)))
-            elif not (self.gym.owner == request.user or (request.user.gym == self.gym and request.user.level >= self.perms)):
+            elif not (request.user.gym == self.gym and request.user.level >= self.perms):
                 raise Http404()
         return super(GymFinderMixin, self).dispatch(request, *args, **kwargs)
 
@@ -75,19 +76,61 @@ class RoutesPage(GymFinderMixin, ListView):
 
 class AdminRoutesPage(GymFinderMixin, ListView):
 
+    perms = 500
+
     template_name = "gym_routes_admin.html"
 
     def get_queryset(self):
         return self.object.routes.all()
 
-class RoutePage(GymPage):
+class RouteFinderMixin(GymFinderMixin):
 
-    template_name = "gym_route.html"
+    def get_route(self):
+        return get_object_or_404(self.object.routes, slug=self.kwargs['route'])
 
     def get_context_data(self, **kwargs):
         context = super(GymFinderMixin, self).get_context_data(**kwargs)
         context['route'] = get_object_or_404(self.object.routes, slug=self.kwargs['route'])
+        context['sent'] = bool(context['route'].sends.filter(id=self.request.user.id).count())
+        context['favorited'] = bool(context['route'].favorites.filter(id=self.request.user.id).count())
         return context
+
+class RoutePage(RouteFinderMixin, DetailView):
+
+    template_name = "gym_route.html"
+
+class RouteAJAX(JSONResponseMixin, RouteFinderMixin, View):
+    
+    #TODO: Remove!
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        route = self.get_route()
+        user = request.user
+        if user.is_anonymous():
+            raise Http404
+        elif user.gym != self.gym:
+            raise Http404
+        elif kwargs['action'] == "send":
+            try:
+                Send(route=route, user=user).save()
+            except IntegrityError:
+                return self.render_to_response(dict(success=True, new=False))
+            return self.render_to_response(dict(success=True, new=True))
+        elif kwargs['action'] == "unsend":
+            Send.objects.filter(user=user, route=route).delete()
+            return self.render_to_response(dict(success=True))
+        elif kwargs['action'] == "favorite":
+            try:
+                Favorite(route=route, user=user).save()
+                return self.render_to_response(dict(success=True))
+            except IntegrityError:
+                return self.render_to_response(dict(success=True, new=False))
+            return self.render_to_response(dict(success=True, new=True))
+        elif kwargs['action'] == "unfavorite":
+            Favorite.objects.filter(user=user, route=route).delete()
+            return self.render_to_response(dict(success=True))
 
 class GymDashboard(GymPage):
 

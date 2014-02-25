@@ -40,7 +40,6 @@ class Gym(DatedMixin):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=32)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Membership', related_name="gyms")
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="owned_gyms")
 
     location_options = models.TextField(blank=True)
     named_routes = models.BooleanField(default=False)
@@ -126,6 +125,9 @@ class Route(DatedMixin, SluggedMixin):
     gym = models.ForeignKey(Gym, related_name='routes')
     notes = models.TextField(blank=True)
     image = models.ImageField(blank=True, upload_to="route_images")
+    sends = models.ManyToManyField(settings.AUTH_USER_MODEL, through="Send", related_name="sends")
+    favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, through="Favorite", related_name="favorites")
+
 
     STATUS_CHOICES = (
         ('complete', 'Complete'),
@@ -155,3 +157,17 @@ class Route(DatedMixin, SluggedMixin):
 
     color1 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
     color2 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
+
+class Send(DatedMixin, models.Model):
+    route = models.ForeignKey(Route)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    class Meta:
+        unique_together = (("route", "user"),)
+
+class Favorite(DatedMixin, models.Model):
+    route = models.ForeignKey(Route)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    class Meta:
+        unique_together = (("route", "user"),)

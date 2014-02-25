@@ -6,6 +6,7 @@ class User(AbstractUser):
     gym = models.ForeignKey('gyms.Gym', related_name="staff", blank=True, null=True)
 
     MEMBERSHIP_LEVELS = (
+        (10000, 'Owner'),
         (5000, 'Manager'),
         (1000, 'Setter'),
         (500, 'Employee'),

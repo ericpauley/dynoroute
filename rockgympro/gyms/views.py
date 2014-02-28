@@ -5,13 +5,33 @@ from django.http import Http404
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
-from gyms.forms import RouteForm, GymSettingsForm
+from gyms.forms import RouteForm, GymSettingsForm, GymAuthForm
 from django.core import urlresolvers
 from django import shortcuts
 from django.utils.http import urlquote
 import json
 from django.http import HttpResponse
 from django.db import IntegrityError
+
+#Auth imports
+from django.conf import settings
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect, QueryDict
+from django.template.response import TemplateResponse
+from django.utils.http import is_safe_url, urlsafe_base64_decode
+from django.utils.translation import ugettext as _
+from django.utils.six.moves.urllib.parse import urlparse, urlunparse
+from django.shortcuts import resolve_url
+from django.views.decorators.debug import sensitive_post_parameters
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+
+# Avoid shadowing the login() and logout() views below.
+from django.contrib.auth import REDIRECT_FIELD_NAME, login as auth_login, logout as auth_logout, get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
 
 class GymFinderMixin(SingleObjectMixin):
 
@@ -25,7 +45,7 @@ class GymFinderMixin(SingleObjectMixin):
         self.gym = self.object
         if self.perms is not None:
             if request.user.is_anonymous():
-                return shortcuts.redirect("%s?next=%s" % (urlresolvers.reverse("login"), urlquote(request.path)))
+                return shortcuts.redirect("%s?next=%s" % (urlresolvers.reverse("gym_login", kwargs={'gym':self.gym.slug}), urlquote(request.path)))
             elif not (request.user.gym == self.gym and request.user.level >= self.perms):
                 raise Http404()
         return super(GymFinderMixin, self).dispatch(request, *args, **kwargs)
@@ -217,3 +237,47 @@ class GymSettings(UpdateView):
 
 def redirect(request, to, *args, **kwargs):
     return shortcuts.redirect(to, *args, **kwargs)
+
+@sensitive_post_parameters()
+@csrf_protect
+@never_cache
+def login(request, gym, template_name='registration/login.html',
+          redirect_field_name=REDIRECT_FIELD_NAME,
+          authentication_form=GymAuthForm,
+          current_app=None, extra_context=None):
+    """
+    Displays the login form and handles the login action.
+    """
+
+    gym = get_object_or_404(Gym, slug=gym)
+    redirect_to = request.POST.get(redirect_field_name,
+                                   request.GET.get(redirect_field_name, ''))
+
+    if request.method == "POST":
+        form = authentication_form(request, data=request.POST, gym=gym)
+        if form.is_valid():
+
+            # Ensure the user-originating redirection url is safe.
+            if not is_safe_url(url=redirect_to, host=request.get_host()):
+                redirect_to = resolve_url(settings.LOGIN_REDIRECT_URL)
+
+            # Okay, security check complete. Log the user in.
+            auth_login(request, form.get_user())
+
+            return HttpResponseRedirect(redirect_to)
+    else:
+        form = authentication_form(request)
+
+    current_site = get_current_site(request)
+
+    context = {
+        'form': form,
+        redirect_field_name: redirect_to,
+        'site': current_site,
+        'site_name': current_site.name,
+        'gym': gym,
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+    return TemplateResponse(request, template_name, context,
+                            current_app=current_app)

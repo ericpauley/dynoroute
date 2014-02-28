@@ -6,6 +6,8 @@ from django import forms
 
 from django.forms.widgets import RadioSelect
 from django.utils.safestring import mark_safe
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate
 
 class RouteForm(ModelForm):
 
@@ -39,3 +41,27 @@ class GymSettingsForm(ModelForm):
     class Meta:
         fields = ['name', 'named_routes', 'location_options']
         model=Gym
+
+class GymAuthForm(AuthenticationForm):
+
+    def __init__(self, request, gym=None, *args, **kwargs):
+        self.gym = gym or None
+        super(GymAuthForm, self).__init__(request, *args, **kwargs)
+
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        if username and password:
+            self.user_cache = authenticate(username=username,
+                                           password=password, gym=self.gym)
+            if self.user_cache is None:
+                raise forms.ValidationError(
+                    self.error_messages['invalid_login'],
+                    code='invalid_login',
+                    params={'username': self.username_field.verbose_name},
+                )
+            else:
+                self.confirm_login_allowed(self.user_cache)
+
+        return self.cleaned_data

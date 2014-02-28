@@ -59,7 +59,7 @@
 
 						<tbody> 
 							{%for route in object_list%}
-							<tr {%if user.perms >= 1000 or gym.owner == user%}onclick="document.location = '{%url 'gym_route_edit' gym=gym.slug route=route.slug%}'"{%endif%}>
+							<tr {%if user.level >= 1000%}onclick="document.location = '{%url 'gym_route_edit' gym=gym.slug route=route.slug%}'"{%endif%}>
 								{%if gym.named_routes%}<td class="hidden-xs">{{route.name}}</td>{%endif%} 
 								<td class="align-center"> 
 									{%if route.color1 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color1}}"></div>{%endif%}

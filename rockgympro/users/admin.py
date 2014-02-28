@@ -10,13 +10,14 @@ from gyms.models import Gym
 class UserCreationForm(UserCreationForm):
     class Meta:
         model = User
+        fields = ('username', 'gym', 'level')
 
     def clean_username(self):
         # Since User.username is unique, this check is redundant,
         # but it sets a nicer error message than the ORM. See #13147.
         username = self.cleaned_data["username"]
         try:
-            User.objects.get(username=username)
+            User.objects.get(username=username, gym=self.data['gym'] or None)
         except User.DoesNotExist:
             return username
         raise forms.ValidationError(
@@ -32,6 +33,9 @@ class MyUserAdmin(UserAdmin):
    add_form = UserCreationForm
    form = UserChangeForm
    fieldsets = UserAdmin.fieldsets + (("Gym Info", {'fields': ('gym', 'level')}),)
+   list_display = ('gym', 'username', 'email', 'first_name', 'last_name', 'is_staff')
+   search_fields = ('gym__name', 'gym__slug', 'username', 'first_name', 'last_name', 'email')
+   add_fieldsets = UserAdmin.add_fieldsets + (("Gym Info", {'fields': ('gym', 'level')}),)
 
 # Now register the new UserAdmin...
 admin.site.register(User, MyUserAdmin)

@@ -8,6 +8,7 @@ from django.forms.widgets import RadioSelect
 from django.utils.safestring import mark_safe
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 class RouteForm(ModelForm):
 
@@ -21,8 +22,7 @@ class RouteForm(ModelForm):
         self.fields['type'].initial = 'bouldering'
         self.fields['location'].choices = tuple([(x.strip(),x.strip()) for x in gym.location_options.split('\n')])
         self.instance.gym = gym
-        if user.gym == gym:
-            self.fields['setter'].initial = user
+        self.fields['setter'].initial = user
 
     class Meta:
         fields = ['type', 'image', 'grade', 'location', 'date_set', 'setter', 'name', 'notes', 'status', 'color1', 'color2']
@@ -65,3 +65,61 @@ class GymAuthForm(AuthenticationForm):
                 self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
+
+class EmployeeCreationForm(UserCreationForm):
+
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'level')
+
+    def __init__(self, gym, *args, **kwargs):
+        super(EmployeeCreationForm, self).__init__(*args, **kwargs)
+        self.instance.gym = gym
+        self.fields['level'].choices = self.fields['level'].choices[2:]
+
+    def clean_username(self):
+        # Since User.username is unique, this check is redundant,
+        # but it sets a nicer error message than the ORM. See #13147.
+        username = self.cleaned_data["username"]
+        try:
+            User.objects.get(username=username, gym=self.instance.gym or None)
+        except User.DoesNotExist:
+            return username
+        raise forms.ValidationError(
+            self.error_messages['duplicate_username'],
+            code='duplicate_username',
+        )
+
+class EmployeeUpdateForm(UserChangeForm):
+
+    password = None
+    username = None
+
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'level')
+
+    def __init__(self, *args, **kwargs):
+        super(EmployeeUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['level'].choices = self.fields['level'].choices[2:]
+        if self.instance.level == 10000:
+            del self.fields['level']
+
+    def clean_username(self):
+        # Since User.username is unique, this check is redundant,
+        # but it sets a nicer error message than the ORM. See #13147.
+        username = self.cleaned_data["username"]
+        try:
+            User.objects.get(username=username, gym=self.instance.gym or None)
+        except User.DoesNotExist:
+            return username
+        raise forms.ValidationError(
+            self.error_messages['duplicate_username'],
+            code='duplicate_username',
+        )

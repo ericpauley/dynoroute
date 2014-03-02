@@ -27,7 +27,7 @@
 				Dashboard
 			</a>				
 		</li>
-		<li {%if request.resolver_match.url_name == "gym_routes"%}class="active"{%endif%}>				
+		<li {%if request.resolver_match.url_name == "gym_routes_admin"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_routes_admin' gym=gym.slug%}">
 				<i class="fa fa-briefcase"></i>
 				Routes
@@ -40,6 +40,12 @@
 			</a>				
 		</li>
 		{%if user.level >= 10000%}
+		<li {%if request.resolver_match.url_name == "gym_staff_admin"%}class="active"{%endif%}>				
+			<a href="{%url 'gym_staff_admin' gym=gym.slug%}">
+				<i class="fa fa-users"></i>
+				Gym Staff
+			</a>				
+		</li>
 		<li {%if request.resolver_match.url_name == "gym_settings"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_settings' gym=gym.slug%}">
 				<i class="fa fa-cogs"></i>

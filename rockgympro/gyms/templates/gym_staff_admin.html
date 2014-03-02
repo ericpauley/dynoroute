@@ -1,0 +1,79 @@
+{%extends 'gym_backend.html'%}
+{%block content%}
+<div id="content-container">
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="portlet">
+
+                <div class="portlet-header">
+
+                    <h3>
+                        Routes
+                    </h3>
+
+                    <ul class="portlet-tools pull-right">
+                        <div class="btn-group">
+                            <a href="{%url 'gym_staff_add' gym=gym.slug%}">
+                                <button type="button" class="btn btn-sm">
+                                    Add Employee
+                                </button>
+                            </a>
+                        </div>
+                    </ul>
+
+                </div> <!-- /.portlet-header -->
+
+                <div class="portlet-content">
+
+
+                    <div class="table-responsive">
+
+                    <table id="gym-staff" class="table table-striped table-checkable"> 
+                        <thead> 
+                            <tr> 
+                                <th class="">Name</th>
+                                <th class="">Position</th> 
+                                <th class="hidden-xs">Username</th> 
+                                <th class="hidden-xs">Email</th>
+                                <th class="">Actions</th>
+                            </tr> 
+                        </thead> 
+
+                        <tbody> 
+                            {%for employee in object_list%}
+                            <tr>
+                                <td>
+                                    {{employee.get_full_name|default:employee.username}}
+                                </td>
+                                <td>
+                                    {{employee.get_level_display}}
+                                </td>
+                                <td class="hidden-xs">
+                                    {{employee.username}}
+                                </td>
+                                <td class="hidden-xs">
+                                    {{employee.email}}
+                                </td>
+                                <td class="">
+                                    <a href="{%url 'gym_staff_update' gym=gym.slug user=employee.username%}">Edit</a>
+                                    {%if employee.level != 10000%}
+                                     | <a href="{%url 'gym_staff_delete' gym=gym.slug user=employee.username%}">Delete</a>
+                                    {%endif%}
+                                </td>
+                            </tr>
+                            {%endfor%}
+                        </tbody> 
+                    </table>
+                            
+                    </div> <!-- /.table-responsive -->
+                    
+                </div> <!-- /.portlet-content -->
+
+            </div> <!-- /.portlet -->
+
+        </div> <!-- /.col-md-6 -->
+    </div> <!-- /.row -->
+</div>
+{%endblock%}

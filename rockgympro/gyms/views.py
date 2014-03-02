@@ -4,8 +4,8 @@ from django.utils.timezone import now
 from django.http import Http404
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.edit import CreateView, UpdateView
-from gyms.forms import RouteForm, GymSettingsForm, GymAuthForm
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from gyms.forms import *
 from django.core import urlresolvers
 from django import shortcuts
 from django.utils.http import urlquote
@@ -106,11 +106,11 @@ class AdminRoutesPage(GymFinderMixin, ListView):
 class RouteFinderMixin(GymFinderMixin):
 
     def get_route(self):
-        return get_object_or_404(self.object.routes, slug=self.kwargs['route'])
+        return get_object_or_404(self.gym.routes, slug=self.kwargs['route'])
 
     def get_context_data(self, **kwargs):
         context = super(GymFinderMixin, self).get_context_data(**kwargs)
-        context['route'] = get_object_or_404(self.object.routes, slug=self.kwargs['route'])
+        context['route'] = self.get_route()
         context['sent'] = bool(context['route'].sends.filter(id=self.request.user.id).count())
         context['favorited'] = bool(context['route'].favorites.filter(id=self.request.user.id).count())
         return context
@@ -185,7 +185,7 @@ class GymStats(JSONResponseMixin, GymFinderMixin, DetailView):
         context['locations'] = self.split(self.gym.locations())
         return context
 
-class GymAdminRouteAdd(GymFinderMixin, CreateView):
+class AdminRouteAdd(GymFinderMixin, CreateView):
 
     perms = 1000
 
@@ -193,7 +193,7 @@ class GymAdminRouteAdd(GymFinderMixin, CreateView):
     template_name="gyms/route_form.html"
 
     def get_form_kwargs(self):
-        kwargs = super(GymAdminRouteAdd, self).get_form_kwargs()
+        kwargs = super(AdminRouteAdd, self).get_form_kwargs()
         kwargs['gym'] = self.gym
         kwargs['user'] = self.request.user
         return kwargs
@@ -201,7 +201,7 @@ class GymAdminRouteAdd(GymFinderMixin, CreateView):
     def get_success_url(self):
         return urlresolvers.reverse("gym_routes", kwargs=dict(gym=self.kwargs['gym']))
 
-class GymAdminRouteEdit(GymFinderMixin, UpdateView):
+class AdminRouteEdit(RouteFinderMixin, UpdateView):
 
     perms = 1000
     template_name_suffix = '_update_form'
@@ -209,23 +209,17 @@ class GymAdminRouteEdit(GymFinderMixin, UpdateView):
     form_class = RouteForm
 
     def get_form_kwargs(self):
-        kwargs = super(GymAdminRouteEdit, self).get_form_kwargs()
+        kwargs = super(AdminRouteEdit, self).get_form_kwargs()
         kwargs['gym'] = self.gym
         kwargs['user'] = self.request.user
         return kwargs
 
-    def get_object(self):
-        route = get_object_or_404(Route, slug=self.kwargs['route'])
-        if route.gym != self.gym:
-            raise Http404
-        return route
-
     def get_success_url(self):
-        return urlresolvers.reverse("gym_routes", kwargs=dict(gym=self.kwargs['gym']))
+        return urlresolvers.reverse("gym_routes_admin", kwargs=dict(gym=self.kwargs['gym']))
 
 class GymSettings(UpdateView):
 
-    perms = 100000
+    perms = 10000
     
     template_name="gym_settings.html"
     form_class = GymSettingsForm
@@ -234,6 +228,70 @@ class GymSettings(UpdateView):
 
     def get_success_url(self):
         return urlresolvers.reverse("gym_dashboard", kwargs=dict(gym=self.kwargs['gym']))
+
+class AdminStaffPage(GymFinderMixin, ListView):
+
+    perms = 10000
+
+    template_name = "gym_staff_admin.html"
+
+    def get_queryset(self):
+        return self.object.staff.order_by("-level")
+
+class EmployeeFinderMixin(GymFinderMixin):
+
+    no_owner = False
+
+    def get_employee(self):
+        user = get_object_or_404(self.gym.staff, username=self.kwargs['user'])
+        if self.no_owner and user.level == 10000:
+            raise Http404
+        return user
+
+    def get_context_data(self, **kwargs):
+        context = super(GymFinderMixin, self).get_context_data(**kwargs)
+        context['employee'] = self.get_employee()
+        context['gym'] = context['employee'].gym
+        return context
+
+    def get_object(self):
+        return self.get_employee()
+
+class AdminEmployeeAdd(GymFinderMixin, CreateView):
+
+    perms = 10000
+
+    form_class = EmployeeCreationForm
+    template_name="gyms/employee_form.html"
+
+    def get_form_kwargs(self):
+        kwargs = super(AdminEmployeeAdd, self).get_form_kwargs()
+        kwargs['gym'] = self.gym
+        return kwargs
+
+    def get_success_url(self):
+        return urlresolvers.reverse("gym_staff_admin", kwargs=dict(gym=self.kwargs['gym']))
+
+class AdminEmployeeUpdate(EmployeeFinderMixin, UpdateView):
+
+    perms = 10000
+
+    form_class = EmployeeUpdateForm
+    template_name="gyms/employee_update_form.html"
+
+    def get_success_url(self):
+        return urlresolvers.reverse("gym_staff_admin", kwargs=dict(gym=self.kwargs['gym']))
+
+class AdminEmployeeDelete(EmployeeFinderMixin, DeleteView):
+
+    no_owner = True
+
+    perms = 10000
+
+    template_name = "gyms/employee_confirm_delete.html"
+
+    def get_success_url(self):
+        return urlresolvers.reverse("gym_staff_admin", kwargs=dict(gym=self.kwargs['gym']))
 
 def redirect(request, to, *args, **kwargs):
     return shortcuts.redirect(to, *args, **kwargs)

@@ -204,7 +204,7 @@ class AdminRouteAdd(GymFinderMixin, CreateView):
 class AdminRouteEdit(RouteFinderMixin, UpdateView):
 
     perms = 1000
-    template_name_suffix = '_update_form'
+    template_name = 'gyms/route_update_form.html'
 
     form_class = RouteForm
 

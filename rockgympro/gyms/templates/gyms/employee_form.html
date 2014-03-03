@@ -16,17 +16,16 @@
                     </h3>
 
                 </div> <!-- /.portlet-header -->
-                <form method="POST" action="">{%csrf_token%}
-                    <div class="portlet-content">
+                <div class="portlet-content">
+                    <form method="POST" action="">{%csrf_token%}
                         {%bootstrap_form form%}{%buttons%}
                         <button type="submit" class="btn btn-primary">
                             Submit
                         </button>
                         {% endbuttons %}
-                    </div> <!-- /.portlet-content -->
-                </div> <!-- /.portlet -->
-            </form>
-
+                    </form>
+                </div> <!-- /.portlet-content -->
+            </div> <!-- /.portlet -->
         </div> <!-- /.col-md-12 -->
     </div> <!-- /.row -->
 </div>

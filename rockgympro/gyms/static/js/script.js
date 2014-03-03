@@ -45,3 +45,5 @@ $("#id_type_0").click(function() {
 	topRopeParent.append(topRopeLabel);
 	topRopeLabel.append(topRopeOptions);
 });
+
+$("#route-rate").raty();

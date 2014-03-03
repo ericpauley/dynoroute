@@ -16,9 +16,9 @@
                     </h3>
 
                 </div> <!-- /.portlet-header -->
-                {{ form.non_field_errors }}
-                <form method="POST" action="" enctype="multipart/form-data">{%csrf_token%}
-                    <div class="portlet-content">
+                <div class="portlet-content">
+                    {{ form.non_field_errors }}
+                    <form method="POST" action="" enctype="multipart/form-data">{%csrf_token%}
                         {%if gym.named_routes%}
                         <div class="row">
                             <div class="col-sm-3">
@@ -76,10 +76,9 @@
                                 <a href="{%url 'gym_dashboard' gym=gym.slug%}" class="btn btn-tertiary">Cancel</a>
                             </div>
                         </div>
-                    </div> <!-- /.portlet-content -->
-                </div> <!-- /.portlet -->
-            </form>
-
+                    </form>
+                </div> <!-- /.portlet-content -->
+            </div> <!-- /.portlet -->
         </div> <!-- /.col-md-12 -->
     </div> <!-- /.row -->
 </div>

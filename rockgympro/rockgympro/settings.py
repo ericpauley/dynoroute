@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'gyms',
     'users',
     'bootstrap3',
+    'debug_toolbar',
 )
 
 AUTH_USER_MODEL = "users.User"

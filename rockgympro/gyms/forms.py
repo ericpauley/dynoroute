@@ -73,7 +73,7 @@ class EmployeeCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'level')
+        fields = ('username', 'first_name', 'last_name', 'level', 'email')
 
     def __init__(self, gym, *args, **kwargs):
         super(EmployeeCreationForm, self).__init__(*args, **kwargs)
@@ -93,7 +93,7 @@ class EmployeeCreationForm(UserCreationForm):
             code='duplicate_username',
         )
 
-class EmployeeUpdateForm(UserChangeForm):
+class EmployeeUpdateForm(EmployeeCreationForm):
 
     password = None
     username = None
@@ -101,25 +101,26 @@ class EmployeeUpdateForm(UserChangeForm):
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
 
+    password1 = forms.CharField(label="New Password",
+        widget=forms.PasswordInput, required=False)
+    password2 = forms.CharField(label="Password confirmation",
+        widget=forms.PasswordInput,
+        help_text="Enter the same password as above, for verification.", required=False)
+
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'level')
+        fields = ('first_name', 'last_name', 'level', 'email')
 
     def __init__(self, *args, **kwargs):
         super(EmployeeUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['password1'].required = False
         self.fields['level'].choices = self.fields['level'].choices[2:]
         if self.instance.level == 10000:
             del self.fields['level']
 
-    def clean_username(self):
-        # Since User.username is unique, this check is redundant,
-        # but it sets a nicer error message than the ORM. See #13147.
-        username = self.cleaned_data["username"]
-        try:
-            User.objects.get(username=username, gym=self.instance.gym or None)
-        except User.DoesNotExist:
-            return username
-        raise forms.ValidationError(
-            self.error_messages['duplicate_username'],
-            code='duplicate_username',
-        )
+    def save(self, commit=True):
+        user = super(UserCreationForm, self).save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user

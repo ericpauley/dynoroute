@@ -1,48 +1,48 @@
-from django.shortcuts import render, get_object_or_404
-from gyms.models import Gym, Route, Send, Favorite
-from django.utils.timezone import now
-from django.http import Http404
-from django.views.generic import ListView, DetailView, View
-from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from gyms.forms import *
-from django.core import urlresolvers
-from django import shortcuts
-from django.utils.http import urlquote
 import json
-from django.http import HttpResponse
-from django.db import IntegrityError
 
-#Auth imports
+from django import shortcuts
 from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, QueryDict
-from django.template.response import TemplateResponse
-from django.utils.http import is_safe_url, urlsafe_base64_decode
-from django.utils.translation import ugettext as _
-from django.utils.six.moves.urllib.parse import urlparse, urlunparse
-from django.shortcuts import resolve_url
-from django.views.decorators.debug import sensitive_post_parameters
-from django.views.decorators.cache import never_cache
-from django.views.decorators.csrf import csrf_protect
-
-# Avoid shadowing the login() and logout() views below.
 from django.contrib.auth import REDIRECT_FIELD_NAME, login as auth_login, logout as auth_logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
+from django.core import urlresolvers
+from django.core.urlresolvers import reverse
+from django.db import IntegrityError
+from django.http import Http404
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect, QueryDict
+from django.shortcuts import render, get_object_or_404
+from django.shortcuts import resolve_url
+from django.template.response import TemplateResponse
+from django.utils.http import is_safe_url, urlsafe_base64_decode
+from django.utils.http import urlquote
+from django.utils.six.moves.urllib.parse import urlparse, urlunparse
+from django.utils.timezone import now
+from django.utils.translation import ugettext as _
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.debug import sensitive_post_parameters
+from django.views.generic import ListView, DetailView, View
+from django.views.generic.base import ContextMixin
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from gyms.forms import *
+from gyms.models import Gym, Route, Send, Favorite
 
-class GymFinderMixin(SingleObjectMixin):
+class GymFinderMixin(ContextMixin):
 
-    model = Gym
-    slug_url_kwarg = "gym"
-    context_object_name="gym"
     perms = None
 
+    @property 
+    def gym(self):
+        try:
+            return self._gym
+        except AttributeError:
+            self._gym = get_object_or_404(Gym, slug=self.kwargs['gym'])
+            return self._gym
+
     def dispatch(self, request, *args, **kwargs):
-        self.object = get_object_or_404(Gym, slug=self.kwargs['gym'])
-        self.gym = self.object
         if self.perms is not None:
             if request.user.is_anonymous():
                 return shortcuts.redirect("%s?next=%s" % (urlresolvers.reverse("gym_login", kwargs={'gym':self.gym.slug}), urlquote(request.path)))
@@ -56,7 +56,7 @@ class GymFinderMixin(SingleObjectMixin):
         return context
 
     def get_object(self):
-        return get_object_or_404(Gym, slug=self.kwargs['gym'])
+        return self.gym
 
 class JSONResponseMixin(object):
     """
@@ -92,7 +92,7 @@ class RoutesPage(GymFinderMixin, ListView):
     template_name = "gym_routes.html"
 
     def get_queryset(self):
-        return self.object.routes.filter(status="complete")
+        return self.gym.routes.filter(status="complete")
 
 class AdminRoutesPage(GymFinderMixin, ListView):
 
@@ -101,19 +101,27 @@ class AdminRoutesPage(GymFinderMixin, ListView):
     template_name = "gym_routes_admin.html"
 
     def get_queryset(self):
-        return self.object.routes.all()
+        return self.gym.routes.all()
 
 class RouteFinderMixin(GymFinderMixin):
 
-    def get_route(self):
-        return get_object_or_404(self.gym.routes, slug=self.kwargs['route'])
+    @property 
+    def route(self):
+        try:
+            return self._route
+        except AttributeError:
+            self._route = get_object_or_404(self.gym.routes, slug=self.kwargs['route'])
+            return self._route
 
     def get_context_data(self, **kwargs):
-        context = super(GymFinderMixin, self).get_context_data(**kwargs)
-        context['route'] = self.get_route()
-        context['sent'] = bool(context['route'].sends.filter(id=self.request.user.id).count())
-        context['favorited'] = bool(context['route'].favorites.filter(id=self.request.user.id).count())
+        context = super(RouteFinderMixin, self).get_context_data(**kwargs)
+        context['route'] = self.route
+        context['sent'] = bool(self.route.sends.filter(id=self.request.user.id).count())
+        context['favorited'] = bool(self.route.favorites.filter(id=self.request.user.id).count())
         return context
+
+    def get_object(self):
+        return self.route
 
 class RoutePage(RouteFinderMixin, DetailView):
 
@@ -187,10 +195,11 @@ class GymStats(JSONResponseMixin, GymFinderMixin, DetailView):
 
 class AdminRouteAdd(GymFinderMixin, CreateView):
 
+    model = Route
+
     perms = 1000
 
     form_class = RouteForm
-    template_name="gyms/route_form.html"
 
     def get_form_kwargs(self):
         kwargs = super(AdminRouteAdd, self).get_form_kwargs()
@@ -199,7 +208,7 @@ class AdminRouteAdd(GymFinderMixin, CreateView):
         return kwargs
 
     def get_success_url(self):
-        return urlresolvers.reverse("gym_routes", kwargs=dict(gym=self.kwargs['gym']))
+        return urlresolvers.reverse("gym_routes_admin", kwargs=dict(gym=self.kwargs['gym']))
 
 class AdminRouteEdit(RouteFinderMixin, UpdateView):
 
@@ -236,26 +245,29 @@ class AdminStaffPage(GymFinderMixin, ListView):
     template_name = "gym_staff_admin.html"
 
     def get_queryset(self):
-        return self.object.staff.order_by("-level")
+        return self.gym.staff.order_by("-level")
 
 class EmployeeFinderMixin(GymFinderMixin):
 
     no_owner = False
 
-    def get_employee(self):
-        user = get_object_or_404(self.gym.staff, username=self.kwargs['user'])
-        if self.no_owner and user.level == 10000:
+    @property 
+    def employee(self):
+        try:
+            employee = self._employee
+        except AttributeError:
+            employee = self._employee = get_object_or_404(self.gym.staff, username=self.kwargs['user'])
+        if self.no_owner and employee.level == 10000:
             raise Http404
-        return user
+        return employee
 
     def get_context_data(self, **kwargs):
-        context = super(GymFinderMixin, self).get_context_data(**kwargs)
-        context['employee'] = self.get_employee()
-        context['gym'] = context['employee'].gym
+        context = super(EmployeeFinderMixin, self).get_context_data(**kwargs)
+        context['employee'] = self.employee
         return context
 
     def get_object(self):
-        return self.get_employee()
+        return self.employee
 
 class AdminEmployeeAdd(GymFinderMixin, CreateView):
 
@@ -278,6 +290,11 @@ class AdminEmployeeUpdate(EmployeeFinderMixin, UpdateView):
 
     form_class = EmployeeUpdateForm
     template_name="gyms/employee_update_form.html"
+
+    def get_form_kwargs(self):
+        kwargs = super(AdminEmployeeUpdate, self).get_form_kwargs()
+        kwargs['gym'] = self.gym
+        return kwargs
 
     def get_success_url(self):
         return urlresolvers.reverse("gym_staff_admin", kwargs=dict(gym=self.kwargs['gym']))

@@ -54,6 +54,7 @@
 	</header> <!-- header -->
 	
 	<nav id="top-bar" class="collapse top-bar-collapse">
+		{%include "messages.html"%}
 		{% include "navbar.html" %}
 	</nav>
 
@@ -63,7 +64,6 @@
 
 	<div id="content">
 		{%block header%}{%endblock%}
-		{%include 'messages.html'%}
 		{% block content %}404 error{% endblock %}
 	</div>
 

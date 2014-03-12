@@ -28,7 +28,7 @@ from django.views.generic import ListView, DetailView, View
 from django.views.generic.base import ContextMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from gyms.forms import *
-from gyms.models import Gym, Route, Send, Favorite
+from gyms.models import *
 
 class GymFinderMixin(ContextMixin):
 
@@ -134,11 +134,11 @@ class RouteAJAX(JSONResponseMixin, RouteFinderMixin, View):
         return self.post(*args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        route = self.get_route()
+        route = self.route
         user = request.user
         if user.is_anonymous():
             raise Http404
-        elif user.gym != self.gym:
+        elif user.gym is not None and user.gym != self.gym:
             raise Http404
         elif kwargs['action'] == "send":
             try:
@@ -158,6 +158,14 @@ class RouteAJAX(JSONResponseMixin, RouteFinderMixin, View):
             return self.render_to_response(dict(success=True, new=True))
         elif kwargs['action'] == "unfavorite":
             Favorite.objects.filter(user=user, route=route).delete()
+            return self.render_to_response(dict(success=True))
+        elif kwargs['action'] == "rate":
+            score = int(request.POST['score'])
+            Rating.objects.filter(route=route, user=user).delete()
+            if(not 0<score<=5):
+                return self.render_to_response(dict(success=False))
+            else:
+                Rating(user=user, route=route, score=score).save()
             return self.render_to_response(dict(success=True))
 
 class GymDashboard(GymPage):

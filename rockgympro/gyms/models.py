@@ -158,16 +158,20 @@ class Route(DatedMixin, SluggedMixin):
     color1 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
     color2 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
 
-class Send(DatedMixin, models.Model):
+class RouteUserMixin(models.Model):
     route = models.ForeignKey(Route)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
     class Meta:
         unique_together = (("route", "user"),)
+        abstract = True
 
-class Favorite(DatedMixin, models.Model):
-    route = models.ForeignKey(Route)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
-    class Meta:
-        unique_together = (("route", "user"),)
+class Send(DatedMixin, RouteUserMixin, models.Model):
+    pass
+
+class Favorite(DatedMixin, RouteUserMixin, models.Model):
+    pass
+
+class Rating(DatedMixin, RouteUserMixin, models.Model):
+    score = models.IntegerField()

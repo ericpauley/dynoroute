@@ -1,5 +1,13 @@
 {% extends "gym_frontend.html" %}
 {% load staticfiles %}
+
+{%block customjs%}
+<script>
+GYM = "{{gym.slug}}"
+ROUTE = "{{route.slug}}"
+</script>
+{%endblock%}
+
 {% block content %}
 
 
@@ -21,16 +29,27 @@
 					<div class="list-group"> 
 
 						<div id="route-rate"></div>
-
-						<a href="javascript:;" class="list-group-item{%if sent%} active{%endif%}">
+						{%if user.is_authenticated and user.gym == None or user.gym == gym %}
+						<a href="javascript:;" id="route-send" class="list-group-item{%if sent%} active{%endif%}">
 							<i class="fa fa-check"></i> &nbsp;&nbsp;
 							Sent it!
 						</a> 
 
-						<a href="javascript:;" class="list-group-item{%if favorited%} active{%endif%}">
+						<a href="javascript:;" id="route-favorite" class="list-group-item{%if favorited%} active{%endif%}">
 							<i class="fa fa-heart"></i> &nbsp;&nbsp;
 							Add to Favorites
 						</a> 
+						{%elif user.is_anonymous%}
+						<a href="{%url 'account_login'%}?next={{request.path|urlencode}}"  class="list-group-item">
+							<i class="fa fa-check"></i> &nbsp;&nbsp;
+							Sent it!
+						</a> 
+
+						<a href="{%url 'account_login'%}?next={{request.path|urlencode}}" class="list-group-item">
+							<i class="fa fa-heart"></i> &nbsp;&nbsp;
+							Add to Favorites
+						</a> 
+						{%endif%}
 
 						<a href="javascript:;" class="list-group-item">
 							<i class="fa fa-list"></i> &nbsp;&nbsp;

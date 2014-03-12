@@ -1,7 +1,7 @@
 <!--Not yet used
 <ul class="nav navbar-nav pull-left">
 	<li class="">
-		<a href="{%url 'home'%}">
+		<a href="#home">
 			<i class="fa fa-home"></i> 
 			Home
 		</a>
@@ -30,7 +30,7 @@
         	<span class="caret"></span>
     	</a>
     	{%else%}
-    	<a class="dropdown-toggle" href="{%url 'login'%}?next={{request.path|urlencode}}">
+    	<a class="dropdown-toggle" href="{%url 'account_login'%}?next={{request.path|urlencode}}">
 			<i class="fa fa-user"></i>
         	Log In
     	</a>
@@ -57,7 +57,7 @@
 	        </li>
 	        <li class="divider"></li>
 	        <li>
-	        	<a href="{%url 'logout'%}?next={{request.path|urlencode}}">
+	        	<a href="{%url 'account_logout'%}?next={{request.path|urlencode}}">
 	        		<i class="fa fa-sign-out"></i> 
 	        		&nbsp;&nbsp;Logout
 	        	</a>

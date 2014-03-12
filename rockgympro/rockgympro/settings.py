@@ -32,6 +32,7 @@ INTERNAL_IPS = (
 # Application definition
 
 INSTALLED_APPS = (
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,9 +43,20 @@ INSTALLED_APPS = (
     'users',
     'bootstrap3',
     'debug_toolbar',
+    'allauth',
+    'allauth.account',
 )
 
+SITE_ID = 1
+
 AUTH_USER_MODEL = "users.User"
+
+LOGIN_REDIRECT_URL = "home"
+
+ACCOUNT_ADAPTER = "gyms.adapter.GymAccountAdapter"
+
+#TODO: Make this unnecessary
+ACCOUNT_LOGOUT_ON_GET = True
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -57,6 +69,9 @@ MIDDLEWARE_CLASSES = (
 
 AUTHENTICATION_BACKENDS = (
     'rockgympro.backends.CaseInsensitiveModelBackend',
+
+    # Needed to make allauth happy.
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
 
 ROOT_URLCONF = 'rockgympro.urls'
@@ -72,6 +87,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.tz',
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
+    "allauth.account.context_processors.account",
 )
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
@@ -115,3 +131,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'vendor/static'),
 )
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

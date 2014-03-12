@@ -1,0 +1,30 @@
+{%extends 'base.html'%}
+{% load staticfiles %}
+
+{%block customcss%}<link rel="stylesheet" href="{%static 'css/Login.css'%}" type="text/css" />{%endblock%}
+
+{%block body%}
+<div id="login-container">
+
+  <div id="logo">
+    <a href="{%url 'home'%}">
+      <img src="{%static 'img/logos/logo-login.png'%}" alt="Logo" />
+    </a>
+  </div>
+
+  <div id="login">
+    {%include 'messages.html'%}
+    {%block content%}
+    {%endblock%}
+
+  </div> <!-- /#login -->
+
+  {%block footer%}
+  {%endblock%}
+
+</div>
+{%endblock%}
+
+{%block customjs%}
+<script src="{%static 'js/Login.js'%}"></script>
+{%endblock%}

@@ -14,11 +14,21 @@
 
 	<div id="login">
 
-		<h3>Welcome to Canvas Admin.</h3>
+		<h3>Welcome to Rock Gym Pro.</h3>
 
-		<h5>Sign up to get access.</h5>
+		<h5>Register Below.</h5>
+
+		{%include 'messages.html'%}
 
 		<form id="login-form" action="{%url 'home'%}" class="form">
+
+			{%for error in form.non_field_errors %}
+				<div class="alert alert-danger">{{ error|escape }}</div>
+			{%endfor%}
+
+			{%for error in form.username.errors %}
+				<div class="alert alert-danger">{{ error|escape }}</div>
+			{%endfor%}
 
 			<div class="form-group">
 				<label for="login-email">Email</label>

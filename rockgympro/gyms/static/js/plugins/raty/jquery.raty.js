@@ -431,7 +431,15 @@
     cancelOff     : static_url+'js/plugins/raty/images/cancel-off.png',
     cancelOn      : static_url+'js/plugins/raty/images/cancel-on.png',
     cancelPlace   : 'left',
-    click         : undefined,
+    click         : function(score, evt) {
+      if(auth){
+        $.post("/"+GYM+"/routes/"+ROUTE+"/rate/",{
+          score: score
+        })
+      }else{
+        document.location = "/login/"
+      }
+    },
     half          : false,
     halfShow      : true,
     hints         : ['bad', 'poor', 'regular', 'good', 'gorgeous'],
@@ -445,7 +453,9 @@
     precision     : false,
     readOnly      : false,
     round         : { down: .25, full: .6, up: .76 },
-    score         : undefined,
+    score         : function() {
+      return $(this).attr('data-score');
+    },
     scoreName     : 'score',
     single        : false,
     size          : 16,

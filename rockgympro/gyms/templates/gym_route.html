@@ -1,10 +1,12 @@
 {% extends "gym_frontend.html" %}
 {% load staticfiles %}
+{% load humanize %}
 
 {%block customjs%}
 <script>
 GYM = "{{gym.slug}}"
 ROUTE = "{{route.slug}}"
+{%if user.is_authenticated%}auth=true{%else%}auth=false{%endif%}
 </script>
 {%endblock%}
 
@@ -28,7 +30,7 @@ ROUTE = "{{route.slug}}"
 
 					<div class="list-group"> 
 
-						<div id="route-rate"></div>
+						<div id="route-rate" {%if score%}data-score="{{score}}"{%endif%}></div>
 						{%if user.is_authenticated and user.gym == None or user.gym == gym %}
 						<a href="javascript:;" id="route-send" class="list-group-item{%if sent%} active{%endif%}">
 							<i class="fa fa-check"></i> &nbsp;&nbsp;
@@ -88,22 +90,29 @@ ROUTE = "{{route.slug}}"
 			<div class="list-group">  
 
 				<a href="javascript:;" class="list-group-item"><h3 class="pull-right"><i class="fa fa-eye"></i></h3>
-					<h4 class="list-group-item-heading">38,847</h4>
+					<h4 class="list-group-item-heading">{{route.views|intcomma}}</h4>
 					<p class="list-group-item-text">Route Views</p>
 					
 				</a>
 
 				<a href="javascript:;" class="list-group-item"><h3 class="pull-right"><i class="fa fa-check"></i></h3>
-					<h4 class="list-group-item-heading">3,482</h4>
-					<p class="list-group-item-text">Route Sends</p>
+					{%with sends=route.sends.count%}
+					<h4 class="list-group-item-heading">{{sends|intcomma}}</h4>
+					<p class="list-group-item-text">Route Send{{sends|pluralize}}</p>
+					{%endwith%}
 
 				</a>
-
+				{%with score=route.score%}
+				{%if score%}
 				<a href="javascript:;" class="list-group-item"><h3 class="pull-right"><i class="fa fa-star"></i></h3>
-					<h4 class="list-group-item-heading">4.2 out of 5</h4>
-					<p class="list-group-item-text">Rating (800 votes)</p>
+					<h4 class="list-group-item-heading">{{route.score|floatformat}} out of 5</h4>
+					{%with count=route.rating_set.count%}
+					<p class="list-group-item-text">Rating ({{count|intcomma}} vote{{count|pluralize}})</p>
+					{%endwith%}
 
 				</a>
+				{%endif%}
+				{%endwith%}
 			</div> <!-- /.list-group -->
 
 		</div>

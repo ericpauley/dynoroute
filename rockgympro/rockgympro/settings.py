@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'gyms',
     'users',
     'bootstrap3',
@@ -52,6 +53,8 @@ SITE_ID = 1
 AUTH_USER_MODEL = "users.User"
 
 LOGIN_REDIRECT_URL = "home"
+
+LOGIN_URL="account_login"
 
 ACCOUNT_ADAPTER = "gyms.adapter.GymAccountAdapter"
 
@@ -70,8 +73,6 @@ MIDDLEWARE_CLASSES = (
 AUTHENTICATION_BACKENDS = (
     'rockgympro.backends.CaseInsensitiveModelBackend',
 
-    # Needed to make allauth happy.
-    "allauth.account.auth_backends.AuthenticationBackend",
 )
 
 ROOT_URLCONF = 'rockgympro.urls'

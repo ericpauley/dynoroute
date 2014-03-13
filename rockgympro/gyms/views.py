@@ -118,6 +118,11 @@ class RouteFinderMixin(GymFinderMixin):
         context['route'] = self.route
         context['sent'] = bool(self.route.sends.filter(id=self.request.user.id).count())
         context['favorited'] = bool(self.route.favorites.filter(id=self.request.user.id).count())
+        if self.request.user.is_authenticated():
+            try:
+                context['score'] = self.route.rating_set.get(user=self.request.user).score
+            except Rating.DoesNotExist:
+                pass
         return context
 
     def get_object(self):
@@ -126,6 +131,12 @@ class RouteFinderMixin(GymFinderMixin):
 class RoutePage(RouteFinderMixin, DetailView):
 
     template_name = "gym_route.html"
+
+    def get_object(self):
+        route = super(RoutePage, self).get_object()
+        route.views += 1
+        route.save()
+        return route
 
 class RouteAJAX(JSONResponseMixin, RouteFinderMixin, View):
     

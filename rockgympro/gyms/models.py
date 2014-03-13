@@ -127,7 +127,7 @@ class Route(DatedMixin, SluggedMixin):
     image = models.ImageField(blank=True, upload_to="route_images")
     sends = models.ManyToManyField(settings.AUTH_USER_MODEL, through="Send", related_name="sends")
     favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, through="Favorite", related_name="favorites")
-
+    views = models.IntegerField(default=0)
 
     STATUS_CHOICES = (
         ('complete', 'Complete'),
@@ -157,6 +157,9 @@ class Route(DatedMixin, SluggedMixin):
 
     color1 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
     color2 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
+
+    def score(self):
+        return self.rating_set.aggregate(models.Avg('score'))['score__avg']
 
 class RouteUserMixin(models.Model):
     route = models.ForeignKey(Route)

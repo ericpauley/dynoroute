@@ -92,7 +92,7 @@ $("#id_type_0").click(function() {
 	topRopeLabel.append(topRopeOptions);
 });
 
-$("#route-rate").raty();
+$("#route-rate").raty({width: false});
 
 $("#route-send").click(function(){
 	$(this).toggleClass("active")

@@ -69,12 +69,14 @@
         var color = $option.val();
         var title = $option.text();
         var selected = '';
+
         if ($option.prop('selected') === true || selectValue === color) {
           selected = 'class="selected"';
-          if (title === 'Clear') {
-            selected = 'class="selected color-clear"';
-            fakeText = '';
-          }
+        }
+
+        if (title === 'Clear') {
+          selected = 'class="selected color-clear"';
+          fakeText = '';
         }
 
         var $colorSpan = $('<span ' + selected

@@ -47,7 +47,7 @@
 										<th>Rating</th> 
 										<th>Location</th>
 										<th>Setter</th>
-										<th class="hidden-md">Status</th> 
+										<th class="hidden-xs">Status</th> 
 									</tr> 
 								</thead> 
 
@@ -62,11 +62,11 @@
 										<td>{{route.location}}</td>
 										<td>{%if route.setter%}{{route.setter.initials}}{%endif%}</td>
 										{%if route.status == "complete"%}
-										<td class="hidden-md"><span class="label label-success">Complete</span></td> 
+										<td class="hidden-xs"><span class="label label-success">Complete</span></td> 
 										{%elif route.status == "in_progress"%}
-										<td class="hidden-md"><span class="label label-warning">In progress</span></td>
+										<td class="hidden-xs"><span class="label label-warning">In progress</span></td>
 										{%else%}
-										<td class="hidden-md"><span class="label label-default">Not Started</span></td>
+										<td class="hidden-xs"><span class="label label-default">Not Started</span></td>
 										{%endif%}
 									</tr> 
 									{%endfor%}

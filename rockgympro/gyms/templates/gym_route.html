@@ -31,6 +31,7 @@ ROUTE = "{{route.slug}}"
 					<div class="list-group"> 
 
 						<div id="route-rate" {%if score%}data-score="{{score}}"{%endif%}></div>
+
 						{%if user.is_authenticated and user.gym == None or user.gym == gym %}
 						<a href="javascript:;" id="route-send" class="list-group-item{%if sent%} active{%endif%}">
 							<i class="fa fa-check"></i> &nbsp;&nbsp;

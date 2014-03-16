@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{%block sidebar%}
+<div id="search">
+	<form>
+		<input class="form-control input-sm" type="text" name="search" placeholder="Search for Gyms..." />
+
+		<button type="submit" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+	</form>		
+</div> <!-- #search -->
+
+<nav id="sidebar">
+	<ul id="main-nav" class="open-active">
+		<li>
+			<a href="{%url 'home'%}">
+				<i class="fa fa-building-o"></i>
+				Gym List
+			</a>		
+		</li>
+		<li>
+			<a href="{%url 'home'%}">
+				<i class="fa fa-info-circle"></i>
+				About
+			</a>		
+		</li>
+	</ul>
+</nav>
+{%endblock%}
+{%block header%}
+<div id="content-header">
+	<h1>Welcome to Dynoroute!</h1>
+</div> <!-- #content-header -->	
+{%endblock%}
+{% block content %}
+<div id="content-container">
+	<div class="col-md-6">
+		<div class="portlet">
+			<div class="portlet-header">
+				<h3>
+					News
+				</h3>
+			</div> <!-- /.portlet-header -->
+
+			<div class="portlet-content">
+
+				More information soon.
+
+			</div> <!-- /.portlet-content -->
+
+		</div> <!-- /.portlet -->
+	</div>
+
+</div> <!-- /#content-container -->
+{% endblock %}

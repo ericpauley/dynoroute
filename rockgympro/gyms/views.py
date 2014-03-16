@@ -87,6 +87,25 @@ class GymPage(GymFinderMixin, DetailView):
 
     template_name="gym_page.html"
 
+class GymAJAX(JSONResponseMixin, GymFinderMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        gym = self.gym
+        user = request.user
+        if user.is_anonymous():
+            raise Http404
+        elif user.gym is not None and user.gym != self.gym:
+            raise Http404
+        elif kwargs['action'] == "follow":
+            try:
+                GymFollow(gym=gym, user=user).save()
+            except IntegrityError:
+                return self.render_to_response(dict(success=True, new=False))
+            return self.render_to_response(dict(success=True, new=True))
+        elif kwargs['action'] == "unfollow":
+            GymFollow.objects.filter(user=user, gym=gym).delete()
+            return self.render_to_response(dict(success=True))
+
 class RoutesPage(GymFinderMixin, ListView):
 
     template_name = "gym_routes.html"
@@ -139,10 +158,6 @@ class RoutePage(RouteFinderMixin, DetailView):
         return route
 
 class RouteAJAX(JSONResponseMixin, RouteFinderMixin, View):
-    
-    #TODO: Remove!
-    def get(self, *args, **kwargs):
-        return self.post(*args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         route = self.route

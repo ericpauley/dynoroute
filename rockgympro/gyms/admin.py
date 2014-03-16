@@ -1,16 +1,16 @@
 from django.contrib import admin
-from gyms.models import Gym, Route, Membership
+from gyms.models import Gym, Route, GymFollow
 from users.models import User
 
-class MembershipInline(admin.TabularInline):
-    model = Membership
-    list_display = ('gym', 'user', 'level')
+class FollowerInline(admin.TabularInline):
+    model = GymFollow
+    list_display = ('gym', 'user', 'date_created')
 
 class GymAdmin(admin.ModelAdmin):
     date_hierarchy = 'created'
     list_display = ('name',)
     inlines = [
-        MembershipInline,
+        FollowerInline,
     ]
 
 class RouteAdmin(admin.ModelAdmin):

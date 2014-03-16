@@ -3,6 +3,7 @@ from gyms.views import *
 
 urlpatterns = patterns('',
     url(r'^$', GymPage.as_view(), name='gym_page'),
+    url(r'^(?P<action>follow|unfollow)/$', GymAJAX.as_view(), name='gym_ajax'),
     url(r'^routes/$', RoutesPage.as_view(), name='gym_routes'),
     url(r'^routes/(?P<route>\w{5})/$', RoutePage.as_view(), name='gym_route'),
     url(r'^routes/(?P<route>\w{5})/(?P<action>send|unsend|favorite|unfavorite|rate)/$', RouteAJAX.as_view(), name='gym_route_ajax'),

@@ -39,7 +39,7 @@ class Gym(DatedMixin):
 
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=32)
-    members = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Membership', related_name="gyms")
+    followers = models.ManyToManyField(settings.AUTH_USER_MODEL, through='GymFollow', related_name="gyms")
 
     location_options = models.TextField(blank=True)
     named_routes = models.BooleanField(default=False)
@@ -90,10 +90,13 @@ class Gym(DatedMixin):
         d = {x['location']:x['count']*1.0 for x in self.live_routes.values('location').annotate(count=Count('slug'))}
         return d if len(d) > 1 else {}
 
-class Membership(DatedMixin):
+class GymFollow(DatedMixin):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     gym = models.ForeignKey(Gym)
+
+    class Meta:
+        unique_together = (("gym", "user"),)
 
 class Route(DatedMixin, SluggedMixin):
     name = models.CharField(blank=True, max_length=255)

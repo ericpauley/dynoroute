@@ -17,14 +17,22 @@
 				Your Dashboard
 			</a>		
 		</li>
-		<!--TODO: Iterate over gyms you are following-->
-		<li>				
-			<a href="{%url 'Welcome'}">
+		{%for gym in users.gyms%}
+		<li>
+			<a href="{%url 'gym_page' gym=gym.slug%}">
 				<i class="fa fa-building-o"></i>
 				{{gym.name}}
 			</a>
 		</li>
-		<!-- END gym iteration-->
+		{%endfor%}
+		{%if user.gym%}
+		<li>
+			<a href="{%url 'gym_dashboard' gym=user.gym.slug%}">
+				<i class="fa fa-dashboard"></i>
+				{{user.gym.name}}
+			</a>
+		</li>
+		{%endif%}
 	</ul>
 </nav>
 {%endblock%}

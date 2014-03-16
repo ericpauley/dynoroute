@@ -44,6 +44,10 @@ class Gym(DatedMixin):
     location_options = models.TextField(blank=True)
     named_routes = models.BooleanField(default=False)
 
+    logo = models.ImageField(blank=True, upload_to="gym_images")
+
+    website_url = models.URLField(blank=True)
+
     def __unicode__(self):
         return self.name
 

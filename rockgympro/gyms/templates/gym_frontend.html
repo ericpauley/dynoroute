@@ -4,7 +4,7 @@
 {%block logo%}
 <h1 id="site-logo">
 	<a href="/grg">
-		<img src="{% static 'img/logos/grg_logo.png' %}" alt="Site Logo" width="195" height="40" />
+		<img src="{%if gym.logo%}{{gym.logo.url}}{%else%}{% static 'img/logos/logo.png' %}{%endif%}" alt="Site Logo" width="195" height="40" />
 	</a>
 </h1>
 {%endblock%}

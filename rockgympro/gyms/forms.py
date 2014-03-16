@@ -10,6 +10,21 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
+class ReadOnlyMixin(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ReadOnlyMixin, self).__init__(*args, **kwargs)
+        for name in self.get_readonly_fields():
+            self.fields[name].widget.attrs['readonly'] = True
+            self.fields[name].widget.attrs['disabled'] = True
+
+    def clean(self):
+        print "egg"
+        for name in self.get_readonly_fields():
+            print name
+            self.cleaned_data[name] = getattr(self.instance, name)
+        return self.cleaned_data
+
 class RouteForm(ModelForm):
 
     location = forms.ChoiceField()
@@ -80,6 +95,9 @@ class EmployeeCreationForm(UserCreationForm):
         self.instance.gym = gym
         self.fields['level'].choices = self.fields['level'].choices[2:]
 
+    def get_readonly_fields(self):
+        return []
+
     def clean_username(self):
         # Since User.username is unique, this check is redundant,
         # but it sets a nicer error message than the ORM. See #13147.
@@ -114,7 +132,6 @@ class EmployeeUpdateForm(EmployeeCreationForm):
     def __init__(self, *args, **kwargs):
         super(EmployeeUpdateForm, self).__init__(*args, **kwargs)
         self.fields['password1'].required = False
-        self.fields['level'].choices = self.fields['level'].choices[2:]
         if self.instance.level == 10000:
             del self.fields['level']
 

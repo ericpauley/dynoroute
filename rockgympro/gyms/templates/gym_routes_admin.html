@@ -67,7 +67,7 @@
 								</td>
 								<td>{{route.get_grade_display}}</td> 
 								<td>{{route.location}}</td>
-								<td>{{route.setter.initials}}</td>
+								<td>{{route.setter.initials|default:route.setter.username}}</td>
 								<td class="hidden-xs">{rating}</td> 
 							</tr>
 							{%endfor%}

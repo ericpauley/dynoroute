@@ -1,3 +1,4 @@
-django
+git+https://github.com/django/django.git
 django-bootstrap3
-allauth
+django-allauth
+git+https://github.com/django-debug-toolbar/django-debug-toolbar.git

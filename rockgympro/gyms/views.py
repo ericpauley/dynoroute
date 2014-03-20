@@ -164,7 +164,7 @@ class RouteAJAX(JSONResponseMixin, RouteFinderMixin, View):
         user = request.user
         if user.is_anonymous():
             raise Http404
-        elif user.gym is not None and user.gym != self.gym:
+        elif user.gym is not None:
             raise Http404
         elif kwargs['action'] == "send":
             try:

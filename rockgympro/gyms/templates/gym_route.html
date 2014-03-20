@@ -29,10 +29,20 @@ ROUTE = "{{route.slug}}"
 					</div> <!-- /.thumbnail -->{%endif%}
 
 					<div class="list-group"> 
-
-						<div id="route-rate" {%if score%}data-score="{{score}}"{%endif%}></div>
-
-						{%if user.is_authenticated and user.gym == None or user.gym == gym %}
+						{%if user.is_anonymous%}
+						<a href="{%url 'account_login'%}?next={{request.path|urlencode}}" class="list-group-item">
+						<div id="route-rate" {%if score%}data-score="{{score}}"{%endif%} {%if user.gym%}readonly{%endif%}></div>
+						</a>
+						{%else%}
+						<div id="route-rate" {%if score%}data-score="{{score}}"{%endif%} {%if user.gym%}readonly{%endif%}></div>
+						{%endif%}
+						{%if user.is_authenticated and user.gym == gym%}
+						<a href="{%url 'gym_route_edit' gym=gym.slug route=route.slug%}" id="route-send" class="list-group-item{%if sent%} active{%endif%}">
+							<i class="fa fa-edit"></i> &nbsp;&nbsp;
+							Edit Route
+						</a> 
+						{%endif%}
+						{%if user.is_authenticated and user.gym == None%}
 						<a href="javascript:;" id="route-send" class="list-group-item{%if sent%} active{%endif%}">
 							<i class="fa fa-check"></i> &nbsp;&nbsp;
 							Sent it!
@@ -106,7 +116,7 @@ ROUTE = "{{route.slug}}"
 				{%with score=route.score%}
 				{%if score%}
 				<a href="javascript:;" class="list-group-item"><h3 class="pull-right"><i class="fa fa-star"></i></h3>
-					<h4 class="list-group-item-heading">{{route.score|floatformat}} out of 5</h4>
+					<h4 class="list-group-item-heading">{{score|floatformat}} out of 5</h4>
 					{%with count=route.rating_set.count%}
 					<p class="list-group-item-text">Rating ({{count|intcomma}} vote{{count|pluralize}})</p>
 					{%endwith%}

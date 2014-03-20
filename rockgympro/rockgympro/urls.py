@@ -12,6 +12,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('allauth.urls')),
+    url(r'^', include('users.urls')),
     url(r'^(?P<gym>\w{3,32})/', include('gyms.urls')),
     url(r'^$', 'users.views.home', name='home'),
     

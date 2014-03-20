@@ -38,7 +38,7 @@
 
     	<ul class="dropdown-menu" role="menu">
 	        <li>
-	        	<a href="{%url 'home'%}">
+	        	<a href="{%if user.gym%}{%url 'gym_dashboard' gym=user.gym.slug%}{%else%}{%url 'home'%}{%endif%}">
 	        		<i class="fa fa-dashboard"></i> 
 	        		&nbsp;&nbsp;Dashboard
 	        	</a>

@@ -25,5 +25,5 @@
   </div>
 </form>
 
-<a href="{%url 'account_login'%}" class="btn btn-default">Already have an account?</a>
+<a href="{%url 'account_login'%}?next={{request.GET.next}}" class="btn btn-default">Already have an account?</a>
 {%endblock%}

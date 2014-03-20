@@ -94,7 +94,10 @@ $("#id_type_0").click(function() {
 
 $("#route-rate").raty({
 	size: 24,
-	width: false
+	width: false,
+    readOnly: function(){
+        return $(this).is("[readonly]")
+    }
 });
 
 $("#route-send").click(function(){

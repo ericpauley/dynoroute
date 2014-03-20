@@ -6,7 +6,7 @@
 		<input class="form-control input-sm" type="text" name="search" placeholder="Search for Gyms..." />
 
 		<button type="submit" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
-	</form>		
+	</form>
 </div> <!-- #search -->
 
 <nav id="sidebar">
@@ -15,7 +15,7 @@
 			<a href="{%url 'home'%}">
 				<i class="fa fa-dashboard"></i>
 				Your Dashboard
-			</a>		
+			</a>
 		</li>
 		{%for gym in users.gyms%}
 		<li>
@@ -82,7 +82,18 @@
 					</thead> 
 
 					<tbody> 
-						
+					{%for fav in favorites%}
+						{%with route=fav.route%}
+						<td class="align-center"> 
+							{%if route.color1 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color1}}"></div>{%endif%}
+							{%if route.color2 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color2}}"></div>{%endif%}
+						</td>
+						<td>{{route.score|floatformat:1}}</td> 
+						<td>{{route.location}}</td>
+						<td>{{route.setter.initials}}</td>
+						<td class="hidden-md">{{fav.created|date:"SHORT_DATE_FORMAT"}}</td> 
+						{%endwith%}
+					{%endfor%}
 					</tbody> 
 				</table>
 
@@ -131,7 +142,18 @@
 					</thead> 
 
 					<tbody> 
-						
+					{%for send in favorites%}
+						{%with route=send.route%}
+						<td class="align-center"> 
+							{%if route.color1 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color1}}"></div>{%endif%}
+							{%if route.color2 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color2}}"></div>{%endif%}
+						</td>
+						<td>{{route.score|floatformat:1}}</td> 
+						<td>{{route.location}}</td>
+						<td>{{route.setter.initials}}</td>
+						<td class="hidden-md">{{send.created|date:"SHORT_DATE_FORMAT"}}</td> 
+						{%endwith%}
+					{%endfor%}
 					</tbody> 
 				</table>
 

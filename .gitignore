@@ -36,3 +36,4 @@ nosetests.xml
 .pydevproject
 
 /rockgympro/db.sqlite3
+/rockgympro/media/

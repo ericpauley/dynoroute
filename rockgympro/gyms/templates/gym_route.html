@@ -69,7 +69,7 @@ ROUTE = "{{route.slug}}"
 							Sender List
 						</a> 
 
-						<a href="javascript:;" class="list-group-item">
+						<a data-toggle="modal" href="#basicModal" class="list-group-item">
 							<i class="fa fa-link"></i> &nbsp;&nbsp;
 							Share Route
 						</a> 
@@ -131,4 +131,22 @@ ROUTE = "{{route.slug}}"
 	</div> <!-- /.row -->
 
 </div> <!-- /#content-container -->
+{% endblock %}
+{% block modals %}
+<div id="basicModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Share This Route</h3>
+      </div>
+      <div class="modal-body">
+        Share Link: 
+        <input type="text" size="30" value="http://dynoroute.com{{request.path|urlencode}}" readonly>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 {% endblock %}

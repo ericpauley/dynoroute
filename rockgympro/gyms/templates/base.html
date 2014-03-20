@@ -47,7 +47,7 @@
 		</a>
 
 		<a href="javascript:;" data-toggle="collapse" data-target=".sidebar-collapse" id="sidebar-toggle" class="navbar-toggle collapsed">
-			<i class="fa fa-reorder"></i>
+			<i class="fa fa-bars"></i>
 		</a>
 
 	</header> <!-- header -->
@@ -69,7 +69,9 @@
 <footer id="footer">
 	{% include "footer.html" %}
 </footer>
-{%endblock%}
+{% endblock %}
+{% block modals %}
+{% endblock %}
 <script>
 static_url = {{STATIC_URL}}
 </script>

@@ -53,8 +53,14 @@
 
 {%block header%}
 <div id="content-header">
-	<h1 class="pull-left">{{gym.name}}</h1>
-	<div class="pull-right gym-info">
+	<div class="pull-left gym-info-left">
+		<h3>{{gym.name}}</h3>
+		<button id="gym-follow" type="button" class="btn btn-default active">
+			<i class="fa fa-plus"></i>
+			Follow Gym
+		</button>
+	</div>
+	<div class="pull-right gym-info-right">
 		<h3>352-335-4789</h3>
 		<h5>704 South Main Street<br/>Gainesville, FL 32601</h5>
 	</div>

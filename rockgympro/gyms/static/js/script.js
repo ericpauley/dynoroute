@@ -117,3 +117,16 @@ $("#route-favorite").click(function(){
 		$.post("/"+GYM+"/routes/"+ROUTE+"/unfavorite/");
 	}
 })
+
+$("#gym-follow").click(function(){
+	$(this).toggleClass("active")
+	if($(this).hasClass("active")){
+		$.post("/"+GYM+"/follow/");
+		$(this).text("Following");
+		$(this).prepend('<i class="fa fa-check"></i>&nbsp;');
+	}else{
+		$.post("/"+GYM+"/unfollow/");
+		$(this).text("Follow Gym");
+		$(this).prepend('<i class="fa fa-plus"></i>&nbsp;');
+	}
+})

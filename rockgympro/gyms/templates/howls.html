@@ -1,0 +1,19 @@
+{% if messages %}
+    {% for message in messages %}
+    <div class="howler"></div>
+    <script>
+		$(function () {
+
+			$.howl ({
+				type: $(".howler").data ('type')
+				, title: ''
+				, content: '{{message}}'
+				, sticky: $(".howler").data ('sticky')
+				, lifetime: 7500
+				, iconCls: $(".howler").data ('icon')
+			});
+				
+		});
+	</script>
+    {% endfor %}
+{% endif %}

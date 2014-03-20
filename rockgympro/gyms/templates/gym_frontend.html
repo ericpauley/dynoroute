@@ -9,11 +9,13 @@
 </h1>
 {%endblock%}
 {%block sidebar%}
-<div id="under-logo">
-	<div>
-		<a href="http://gainesvillerock.com/home">Go to Gym Site</a>
-	</div>
-</div>
+<div id="search">
+	<form>
+		<input class="form-control input-sm" type="text" name="search" placeholder="Search for Gyms..." />
+
+		<button type="submit" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+	</form>		
+</div> <!-- #search -->
 
 <nav id="sidebar">		
 	
@@ -21,7 +23,7 @@
 
 		<li {%if request.resolver_match.url_name == "gym_page"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_page' gym=gym.slug%}">
-				<i class="fa fa-building-o"></i>
+				<i class="fa fa-home"></i>
 				{{gym.name}}
 			</a>				
 		</li>
@@ -29,6 +31,12 @@
 			<a href="{%url 'gym_routes' gym=gym.slug%}">
 				<i class="fa fa-briefcase"></i>
 				Routes
+			</a>				
+		</li>
+		<li>				
+			<a href="{{gym.website_url}}">
+				<i class="fa fa-building-o"></i>
+				Go to Gym's Site
 			</a>				
 		</li>
 		{%if user.gym%}

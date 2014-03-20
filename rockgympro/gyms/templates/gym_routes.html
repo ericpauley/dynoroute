@@ -16,19 +16,30 @@
 					<ul class="portlet-tools pull-right">
 						<div class="btn-group">
 							<button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown">
-								Sort by: Most Recent
+								Sort by: {{sort_name}}
 								<span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
+								{%if sort != "-date_set"%}
 								<li>
-									<a href="#">Difficulty</a>
+									<a href="?sort=-date_set">Most Recent</a>
 								</li>
+								{%endif%}
+								{%if sort != "difficulty"%}
 								<li>
-									<a href="#">Location</a>
+									<a href="?sort=grade">Difficulty</a>
 								</li>
+								{%endif%}
+								{%if sort != "location"%}
 								<li>
-									<a href="#">User Rating</a>
+									<a href="?sort=location">Location</a>
 								</li>
+								{%endif%}
+								{%if sort != "-score"%}
+								<li>
+									<a href="?sort=-score">User Rating</a>
+								</li>
+								{%endif%}
 							</ul>
 						</div>
 					</ul>

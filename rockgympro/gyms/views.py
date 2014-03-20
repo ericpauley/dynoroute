@@ -109,18 +109,36 @@ class GymAJAX(JSONResponseMixin, GymFinderMixin, View):
 class RoutesPage(GymFinderMixin, ListView):
 
     template_name = "gym_routes.html"
+    sorts = {
+        "-date_set":"Most Recent",
+        "grade":"Difficulty",
+        "location":"Location",
+        "-score":"User Rating",
+    }
+
+    def get_sort(self):
+        sort = self.request.GET.get("sort", "-date_set")
+        if not sort in self.sorts:
+            sort = "-date_set"
+        return sort
+
+    def get_context_data(self, **kwargs):
+        context = super(RoutesPage, self).get_context_data(**kwargs)
+        context['sort'] = self.get_sort()
+        context['sort_name'] = self.sorts[self.get_sort()]
+        return context
 
     def get_queryset(self):
-        return self.gym.routes.filter(status="complete")
+        return self.gym.routes.filter(status="complete").order_by(self.get_sort())
 
-class AdminRoutesPage(GymFinderMixin, ListView):
+class AdminRoutesPage(RoutesPage):
 
     perms = 500
 
     template_name = "gym_routes_admin.html"
 
     def get_queryset(self):
-        return self.gym.routes.all()
+        return self.gym.routes.order_by(self.get_sort())
 
 class RouteFinderMixin(GymFinderMixin):
 

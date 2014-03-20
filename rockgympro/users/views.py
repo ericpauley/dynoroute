@@ -25,5 +25,22 @@ def dashboard(request):
     }
     return render(request, "user_dashboard.html", context)
 
-def signup(request):
-    pass
+@login_required
+def favorites(request):
+    if request.user.gym is not None:
+        return redirect("gym_dashboard", gym=request.user.gym.slug)
+    context = {
+        "routes":request.user.favorite_set.order_by("-created")[:10],
+        "title":"Favorite Routes"
+    }
+    return render(request, "user_routes.html", context)
+
+@login_required
+def sends(request):
+    if request.user.gym is not None:
+        return redirect("gym_dashboard", gym=request.user.gym.slug)
+    context = {
+        "routes":request.user.send_set.order_by("-created")[:10],
+        "title":"Sent Routes"
+    }
+    return render(request, "user_routes.html", context)

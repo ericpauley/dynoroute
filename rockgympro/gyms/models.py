@@ -98,8 +98,14 @@ class GymFollow(DatedMixin):
     class Meta:
         unique_together = (("gym", "user"),)
 
+class RouteManager(models.Manager):
+    def get_queryset(self):
+        return super(RouteManager, self).get_queryset().annotate(score=models.Avg('rating__score'))
+
 class Route(DatedMixin, SluggedMixin):
     name = models.CharField(blank=True, max_length=255)
+
+    objects = RouteManager()
 
     TYPE_CHOICES = (
         ('top_rope', 'Top Rope'),
@@ -164,9 +170,6 @@ class Route(DatedMixin, SluggedMixin):
 
     color1 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
     color2 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
-
-    def score(self):
-        return self.rating_set.aggregate(models.Avg('score'))['score__avg']
 
 class RouteUserMixin(models.Model):
     route = models.ForeignKey(Route)

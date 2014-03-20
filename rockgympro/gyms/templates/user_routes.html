@@ -1,0 +1,53 @@
+{% extends "user_base.html" %}
+{% load staticfiles %}
+{% block content %}
+<div id="content-container">
+
+        <div class="col-md-12">
+
+            <div class="portlet">
+
+                <div class="portlet-header">
+
+                    <h3>
+                        {{title}}
+                    </h3>
+
+                </div> <!-- /.portlet-header -->
+                <div class="portlet-content">
+                    <div class="table-responsive">
+
+                        <table id="gym-routes" class="table table-striped table-checkable"> 
+                            <thead> 
+                                <tr> 
+                                    <th class="align-center">Color</th> 
+                                    <th>Rating</th> 
+                                    <th>Location</th>
+                                    <th>Setter</th>
+                                    <th class="hidden-md">Date</th> 
+                                </tr> 
+                            </thead> 
+
+                            <tbody> 
+                            {%for entry in routes%}
+                                {%with route=entry.route%}
+                                <td class="align-center"> 
+                                    {%if route.color1 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color1}}"></div>{%endif%}
+                                    {%if route.color2 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color2}}"></div>{%endif%}
+                                </td>
+                                <td>{{route.score|floatformat:1}}</td> 
+                                <td>{{route.location}}</td>
+                                <td>{{route.setter.initials}}</td>
+                                <td class="hidden-md">{{entry.created|date:"SHORT_DATE_FORMAT"}}</td> 
+                                {%endwith%}
+                            {%endfor%}
+                            </tbody> 
+                        </table>
+
+
+                    </div> <!-- /.table-responsive -->
+                </div> <!-- /.portlet-content -->
+            </div> <!-- /.portlet -->
+        </div> <!-- /.col-md-12 -->
+</div>
+{% endblock %}

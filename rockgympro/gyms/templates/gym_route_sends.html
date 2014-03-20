@@ -1,0 +1,52 @@
+{%extends 'gym_frontend.html'%}
+{%block content%}
+<div id="content-container">
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="portlet">
+
+                <div class="portlet-header">
+
+                    <h3>
+                        Route Sends
+                    </h3>
+
+                </div> <!-- /.portlet-header -->
+
+                <div class="portlet-content">
+
+
+                    <div class="table-responsive">
+
+                    <table id="gym-routes" class="table table-striped table-checkable"> 
+                        <thead> 
+                            <tr> 
+                                <th>Name</th>
+                                <th>Date</th> 
+                            </tr> 
+                        </thead> 
+
+                        <tbody> 
+                            {%for send in object_list%}
+                            <tr onclick="document.location = '{%url 'gym_route' gym=gym.slug route=route.slug%}'">
+                                <td>
+                                {{send.user.get_full_name}}</td>
+                                <td>
+                                {{send.created|date:"SHORT_DATE_FORMAT"}}</td>
+                            </tr>
+                            {%endfor%}
+                        </tbody> 
+                    </table>
+                            
+                    </div> <!-- /.table-responsive -->
+                    
+                </div> <!-- /.portlet-content -->
+
+            </div> <!-- /.portlet -->
+
+        </div> <!-- /.col-md-6 -->
+    </div> <!-- /.row -->
+</div>
+{%endblock%}

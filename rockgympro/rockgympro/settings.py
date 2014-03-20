@@ -29,6 +29,8 @@ INTERNAL_IPS = (
     '127.0.0.1',
 )
 
+ACCOUNT_SIGNUP_FORM_CLASS = 'users.forms.CustomSignupForm'
+
 # Application definition
 
 INSTALLED_APPS = (

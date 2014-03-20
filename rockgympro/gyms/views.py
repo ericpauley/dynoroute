@@ -53,6 +53,7 @@ class GymFinderMixin(ContextMixin):
     def get_context_data(self, **kwargs):
         context = super(GymFinderMixin, self).get_context_data(**kwargs)
         context['gym'] = self.gym
+        context['logout_next'] = urlresolvers.reverse("gym_page", kwargs=dict(gym=self.kwargs['gym']))
         return context
 
     def get_object(self):
@@ -174,6 +175,12 @@ class RoutePage(RouteFinderMixin, DetailView):
         route.views += 1
         route.save()
         return route
+
+class RouteSendList(RouteFinderMixin, ListView):
+    template_name = "gym_route_sends.html"
+
+    def get_queryset(self):
+        return self.route.send_set.order_by("-created")
 
 class RouteAJAX(JSONResponseMixin, RouteFinderMixin, View):
 

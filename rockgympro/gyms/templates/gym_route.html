@@ -64,7 +64,7 @@ ROUTE = "{{route.slug}}"
 						</a> 
 						{%endif%}
 
-						<a href="javascript:;" class="list-group-item">
+						<a href="{%url 'gym_route_sends' gym=gym.slug route=route.slug%}" class="list-group-item">
 							<i class="fa fa-list"></i> &nbsp;&nbsp;
 							Sender List
 						</a> 

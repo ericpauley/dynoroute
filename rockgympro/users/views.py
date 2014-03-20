@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib import auth
 from django.views.generic import DetailView
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 
 def home(request):
     if request.user.is_authenticated():
@@ -22,6 +23,7 @@ def dashboard(request):
     context = {
         "favorites":request.user.favorite_set.order_by("-created")[:10],
         "sends":request.user.send_set.order_by("-created")[:10],
+        "logout_next":reverse("home"),
     }
     return render(request, "user_dashboard.html", context)
 
@@ -31,7 +33,8 @@ def favorites(request):
         return redirect("gym_dashboard", gym=request.user.gym.slug)
     context = {
         "routes":request.user.favorite_set.order_by("-created")[:10],
-        "title":"Favorite Routes"
+        "title":"Favorite Routes",
+        "logout_next":reverse("home"),
     }
     return render(request, "user_routes.html", context)
 
@@ -41,6 +44,7 @@ def sends(request):
         return redirect("gym_dashboard", gym=request.user.gym.slug)
     context = {
         "routes":request.user.send_set.order_by("-created")[:10],
-        "title":"Sent Routes"
+        "title":"Sent Routes",
+        "logout_next":reverse("home"),
     }
     return render(request, "user_routes.html", context)

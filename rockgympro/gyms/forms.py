@@ -83,12 +83,11 @@ class GymAuthForm(AuthenticationForm):
 
 class EmployeeCreationForm(UserCreationForm):
 
-    first_name = forms.CharField(required=True)
-    last_name = forms.CharField(required=True)
+    name = forms.CharField(required=True)
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'level', 'email')
+        fields = ('username', 'name', 'level', 'email')
 
     def __init__(self, gym, *args, **kwargs):
         super(EmployeeCreationForm, self).__init__(*args, **kwargs)
@@ -116,8 +115,7 @@ class EmployeeUpdateForm(EmployeeCreationForm):
     password = None
     username = None
 
-    first_name = forms.CharField(required=True)
-    last_name = forms.CharField(required=True)
+    name = forms.CharField(required=True)
 
     password1 = forms.CharField(label="New Password",
         widget=forms.PasswordInput, required=False)
@@ -127,7 +125,7 @@ class EmployeeUpdateForm(EmployeeCreationForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'level', 'email')
+        fields = ('name', 'level', 'email')
 
     def __init__(self, *args, **kwargs):
         super(EmployeeUpdateForm, self).__init__(*args, **kwargs)

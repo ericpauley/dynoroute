@@ -51,10 +51,17 @@
 	        </li>
 	        <li class="divider"></li>
 	        <li>
+                {%if logout_next%}
+                <a href="{%url 'account_logout'%}?next={{logout_next|urlencode}}">
+                    <i class="fa fa-sign-out"></i> 
+                    &nbsp;&nbsp;Logout
+                </a>
+                {%else%}
 	        	<a href="{%url 'account_logout'%}?next={{request.path|urlencode}}">
 	        		<i class="fa fa-sign-out"></i> 
 	        		&nbsp;&nbsp;Logout
 	        	</a>
+                {%endif%}
 	        </li>
     	</ul>
     </li>

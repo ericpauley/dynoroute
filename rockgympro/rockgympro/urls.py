@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^', include('allauth.urls')),
     url(r'^', include('users.urls')),
     url(r'^gyms/', 'gyms.views.gym_list', name='gym_list'),
+    url(r'^about/', 'gyms.views.about', name='about'),
     url(r'^(?P<gym>\w{3,32})/', include('gyms.urls')),
     url(r'^$', 'users.views.home', name='home'),
     

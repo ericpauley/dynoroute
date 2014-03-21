@@ -30,6 +30,9 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from gyms.forms import *
 from gyms.models import *
 
+def about(request):
+    return render(request, "about.html")
+
 def gym_list(request):
     context = dict(gyms=Gym.objects.all().order_by("name"))
     return render(request, "gyms_list.html", context)

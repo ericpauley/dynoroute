@@ -54,6 +54,8 @@ class GymFinderMixin(ContextMixin):
         context = super(GymFinderMixin, self).get_context_data(**kwargs)
         context['gym'] = self.gym
         context['logout_next'] = urlresolvers.reverse("gym_page", kwargs=dict(gym=self.kwargs['gym']))
+        if self.request.user.is_authenticated():
+            context['followed'] = bool(GymFollow.objects.filter(gym=self.gym, user=self.request.user).count())
         return context
 
     def get_object(self):

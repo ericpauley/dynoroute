@@ -1,6 +1,15 @@
 {%extends 'base.html'%}
 {%load gym_extras %}
 {%load staticfiles%}
+
+{%block customjs%}
+<script>
+GYM = "{{gym.slug}}"
+ROUTE = "{{route.slug}}"
+{%if user.is_authenticated%}auth=true{%else%}auth=false{%endif%}
+</script>
+{%endblock%}
+
 {%block logo%}
 <h1 id="site-logo">
 	<a href="/grg">
@@ -55,10 +64,22 @@
 <div id="content-header">
 	<div class="pull-left gym-info-left">
 		<h3>{{gym.name}}</h3>
-		<button id="gym-follow" type="button" class="btn btn-default active">
+		{%if user.is_authenticated%}
+		<button id="gym-follow" type="button" class="btn btn-default {%if followed%}active{%endif%}">
+			{%if not followed%}
 			<i class="fa fa-plus"></i>
 			Follow Gym
+			{%else%}
+			<i class="fa fa-check"></i>
+			Following
+			{%endif%}
 		</button>
+		{%else%}
+		<a href="{%url 'account_login'%}?next={{request.path|urlencode}}" type="button" class="btn btn-default">
+			<i class="fa fa-plus"></i>
+			Follow Gym
+		</a>
+		{%endif%}
 	</div>
 	<div class="pull-right gym-info-right">
 		<h3>352-335-4789</h3>

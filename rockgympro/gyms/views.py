@@ -30,6 +30,10 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from gyms.forms import *
 from gyms.models import *
 
+def gym_list(request):
+    context = dict(gyms=Gym.objects.all().order_by("name"))
+    return render("gym_list.html", request, context)
+
 class GymFinderMixin(ContextMixin):
 
     perms = None

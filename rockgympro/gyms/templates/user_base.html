@@ -26,10 +26,10 @@
         <li {%if request.resolver_match.url_name == "sends"%}class="active"{%endif%}>
             <a href="{%url 'sends'%}">
                 <i class="fa fa-dashboard"></i>
-                Send Routes
+                Sent Routes
             </a>
         </li>
-        {%for gym in users.gyms%}
+        {%for gym in user.gyms.all%}
         <li>
             <a href="{%url 'gym_page' gym=gym.slug%}">
                 <i class="fa fa-building-o"></i>

@@ -2,14 +2,6 @@
 {% load staticfiles %}
 {% load humanize %}
 
-{%block customjs%}
-<script>
-GYM = "{{gym.slug}}"
-ROUTE = "{{route.slug}}"
-{%if user.is_authenticated%}auth=true{%else%}auth=false{%endif%}
-</script>
-{%endblock%}
-
 {% block content %}
 
 

@@ -32,7 +32,7 @@ from gyms.models import *
 
 def gym_list(request):
     context = dict(gyms=Gym.objects.all().order_by("name"))
-    return render("gym_list.html", request, context)
+    return render("gyms_list.html", request, context)
 
 class GymFinderMixin(ContextMixin):
 

@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('allauth.urls')),
     url(r'^', include('users.urls')),
-    url(r'^gyms/', 'gyms.views.gym_list'),
+    url(r'^gyms/', 'gyms.views.gym_list', name='gym_list'),
     url(r'^(?P<gym>\w{3,32})/', include('gyms.urls')),
     url(r'^$', 'users.views.home', name='home'),
     

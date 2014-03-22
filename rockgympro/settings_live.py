@@ -19,6 +19,8 @@ CACHES = {
     }
 }
 
+DEFAULT_FROM_EMAIL = "noreply@dynoroute.com"
+
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
     'debug_toolbar.panels.timer.TimerPanel',

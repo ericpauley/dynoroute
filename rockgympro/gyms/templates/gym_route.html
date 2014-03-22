@@ -23,10 +23,12 @@
 					<div class="list-group"> 
 						{%if user.is_anonymous%}
 						<a href="{%url 'account_login'%}?next={{request.path|urlencode}}" class="list-group-item">
-						<div id="route-rate" {%if score%}data-score="{{score}}"{%endif%} {%if user.gym%}readonly{%endif%}></div>
+							<div id="route-rate" {%if score%}data-score="{{score}}"{%endif%} {%if user.gym%}readonly{%endif%}></div>
 						</a>
 						{%else%}
-						<div id="route-rate" {%if score%}data-score="{{score}}"{%endif%} {%if user.gym%}readonly{%endif%}></div>
+						<a href="javscript:;" class="list-group-item">
+							<div id="route-rate" {%if score%}data-score="{{score}}"{%endif%} {%if user.gym%}readonly{%endif%}></div>
+						</a>
 						{%endif%}
 						{%if user.is_authenticated and user.gym == gym%}
 						<a href="{%url 'gym_route_edit' gym=gym.slug route=route.slug%}" id="route-send" class="list-group-item{%if sent%} active{%endif%}">
@@ -98,7 +100,7 @@
 					
 				</a>
 
-				<a href="javascript:;" class="list-group-item"><h3 class="pull-right"><i class="fa fa-check"></i></h3>
+				<a href="{%url 'gym_route_sends' gym=gym.slug route=route.slug%}" class="list-group-item"><h3 class="pull-right"><i class="fa fa-check"></i></h3>
 					{%with sends=route.sends.count%}
 					<h4 class="list-group-item-heading">{{sends|intcomma}}</h4>
 					<p class="list-group-item-text">Route Send{{sends|pluralize}}</p>

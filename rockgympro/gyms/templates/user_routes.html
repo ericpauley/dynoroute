@@ -20,24 +20,26 @@
                             <thead> 
                                 <tr> 
                                     <th class="align-center">Color</th> 
-                                    <th>Rating</th> 
+                                    <th>Grade</th> 
                                     <th>Location</th>
-                                    <th>Setter</th>
-                                    <th class="hidden-md">Date</th> 
+                                    <th class="hidden-xs">Setter</th>
+                                    <th class="hidden-xs">Date</th> 
                                 </tr> 
                             </thead> 
 
                             <tbody> 
                             {%for entry in routes%}
                                 {%with route=entry.route%}
-                                <td class="align-center"> 
-                                    {%if route.color1 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color1}}"></div>{%endif%}
-                                    {%if route.color2 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color2}}"></div>{%endif%}
-                                </td>
-                                <td>{{route.score|floatformat:1}}</td> 
-                                <td>{{route.location}}</td>
-                                <td>{{route.setter.initials}}</td>
-                                <td class="hidden-md">{{entry.created|date:"SHORT_DATE_FORMAT"}}</td> 
+                                <tr onclick="document.location = '{%url 'gym_route' gym=route.gym.slug route=route.slug%}'">
+                                    <td class="align-center"> 
+                                        {%if route.color1 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color1}}"></div>{%endif%}
+                                        {%if route.color2 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color2}}"></div>{%endif%}
+                                    </td>
+                                    <td>{{route.get_grade_display}}</td> 
+                                    <td>{{route.location}}</td>
+                                    <td class="hidden-xs">{{route.setter.initials}}</td>
+                                    <td class="hidden-xs">{{entry.created|date:"SHORT_DATE_FORMAT"}}</td>
+                                </tr>
                                 {%endwith%}
                             {%endfor%}
                             </tbody> 

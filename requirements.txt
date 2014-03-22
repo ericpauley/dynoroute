@@ -8,3 +8,4 @@ boto
 django-ses
 django-debug-toolbar
 MySQL-python
+pillow

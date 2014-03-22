@@ -6,5 +6,5 @@ python-memcached
 https://bitbucket.org/russmo/django-storages-multi/get/default.zip
 boto
 django-ses
-git+https://github.com/django-debug-toolbar/django-debug-toolbar.git
+django-debug-toolbar
 MySQL-python

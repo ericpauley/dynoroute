@@ -35,6 +35,6 @@ nosetests.xml
 .project
 .pydevproject
 
-/rockgympro/db.sqlite3
-/rockgympro/media/
+/db.sqlite3
+/media/
 .elasticbeanstalk/

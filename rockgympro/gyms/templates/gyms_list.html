@@ -28,7 +28,7 @@
 
                             <tbody> 
                             {%for gym in gyms%}
-                                <tr>
+                                <tr onclick="document.location.href={% url 'gym_page' gym=gym.slug %}">
                                     <td>{{gym.name}}</td> 
                                     <td>{{gym.routes.count}}</td>
                                 </tr>

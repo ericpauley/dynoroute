@@ -45,7 +45,6 @@ INSTALLED_APPS = (
     'gyms',
     'users',
     'bootstrap3',
-    'debug_toolbar',
     'allauth',
     'allauth.account',
 )

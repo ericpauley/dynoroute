@@ -7,3 +7,4 @@ https://bitbucket.org/russmo/django-storages-multi/get/default.zip
 boto
 django-ses
 django-debug-toolbar
+MySQL-python

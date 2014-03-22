@@ -1,0 +1,15 @@
+[global]
+ApplicationName=dynoroute
+AwsCredentialFile=C:\Users\Eric\.elasticbeanstalk\aws_credential_file
+DevToolsEndpoint=git.elasticbeanstalk.us-east-1.amazonaws.com
+EnvironmentName=dynoroute-env
+EnvironmentType=LoadBalanced
+InstanceProfileName=aws-elasticbeanstalk-ec2-role
+OptionSettingFile=C:\Users\Eric\Dropbox\Code\rockgympro\.elasticbeanstalk\optionsettings.dynoroute-env
+RdsDeletionPolicy=Delete
+RdsEnabled=Yes
+RdsSourceSnapshotName=
+Region=us-east-1
+ServiceEndpoint=https://elasticbeanstalk.us-east-1.amazonaws.com
+SolutionStack=32bit Amazon Linux 2013.09 running Python 2.7
+

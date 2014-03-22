@@ -6,6 +6,7 @@ from django.db.models import Count
 from collections import OrderedDict
 from decimal import Decimal
 from django.contrib.auth import get_user_model
+import datetime
 
 class DatedMixin(models.Model):
 
@@ -30,8 +31,8 @@ class SluggedMixin(models.Model):
 
 class GymManager(models.Manager):
 
-    def get_query_set(self):
-        return super(GymManager, self).get_query_set()
+    def get_queryset(self):
+        return super(GymManager, self).get_queryset()
 
 class Gym(DatedMixin):
 
@@ -133,7 +134,7 @@ class Route(DatedMixin, SluggedMixin):
     grade = models.DecimalField(choices=GRADE_CHOICES, blank=False, max_digits=10, decimal_places=2)
     setter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='routes', blank=True, null=True)
     location = models.CharField(max_length=32)
-    date_set = models.DateField(default=timezone.now())
+    date_set = models.DateField(default=datetime.date.today())
     date_torn = models.DateField(blank=True, null=True)
     gym = models.ForeignKey(Gym, related_name='routes')
     notes = models.TextField(blank=True)

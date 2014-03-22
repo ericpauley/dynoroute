@@ -35,6 +35,8 @@ nosetests.xml
 .project
 .pydevproject
 
-/db.sqlite3
-/media/
+db.sqlite3
+/media/
+
+*.sqlite3
 .elasticbeanstalk/

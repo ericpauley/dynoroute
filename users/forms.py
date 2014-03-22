@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
+from django.contrib.auth import authenticate, login
 
 class RegistrationForm(UserCreationForm):
   def clean_username(self):
@@ -19,4 +20,5 @@ class CustomSignupForm(forms.Form):
     name = forms.CharField()
 
     def signup(self, request, user):
+        user.name = self.cleaned_data['name']
         user.save()

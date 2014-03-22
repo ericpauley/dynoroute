@@ -32,3 +32,12 @@ class GymAccountAdapter(DefaultAccountAdapter):
             return username
         raise forms.ValidationError(_("This username is already taken. Please "
                                       "choose another."))
+
+    def login(self, request, user):
+        from django.contrib.auth import login
+        # HACK: This is not nice. The proper Django way is to use an
+        # authentication backend
+        if not hasattr(user, 'backend'):
+            user.backend \
+                = 'rockgympro.backends.CaseInsensitiveModelBackend'
+        login(request, user)

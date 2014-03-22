@@ -17,7 +17,7 @@
 
   <div class="form-group">
     <label for="login-login">Username</label>
-    <input type="text" class="form-control" id="login-login" name="login" placeholder="Username" value="{{form.login.value|default:""}}">
+    <input type="text" autofocus class="form-control" id="login-login" name="login" placeholder="Username" value="{{form.login.value|default:""}}">
   </div>
 
   {%for error in form.password.errors %}

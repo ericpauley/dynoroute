@@ -109,7 +109,7 @@ def get_image_name(self, filename):
         sha = sha256()
         f = self.image
         sha.update(f.read())
-        f.close()
+        f.seek(0)
         return "route_images/%s.%s" % (base64.urlsafe_b64encode(sha.digest()).replace("=","_"), filename.split(".")[-1])
 
 class Route(DatedMixin, SluggedMixin):
@@ -156,6 +156,7 @@ class Route(DatedMixin, SluggedMixin):
         ('complete', 'Complete'),
         ('in_progress', 'In Progress'),
         ('not_started', 'Not Started'),
+        ('torn', 'Torn'),
     )
 
     status = models.CharField(choices=STATUS_CHOICES, max_length=16, blank=False, default="complete")
@@ -180,6 +181,14 @@ class Route(DatedMixin, SluggedMixin):
 
     color1 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
     color2 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
+
+    def save(self, *args, **kwargs):
+        if self.status == 'torn':
+            if not self.date_torn:
+                self.date_torn = datetime.date.today()
+        else:
+            self.date_torn = None
+        super(Route, self).save(*args, **kwargs)
 
 class RouteUserMixin(models.Model):
     route = models.ForeignKey(Route)

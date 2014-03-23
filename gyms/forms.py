@@ -47,7 +47,7 @@ class RouteForm(ModelForm):
         'color1': forms.Select(attrs=dict(id="route-color")),
         'color2': forms.Select(attrs=dict(id="route-color2")),
         'image': forms.FileInput(),
-        'date_set': forms.DateInput(attrs=dict(id="route-date-set"), format="%m/%d/%Y"),
+        'date_set': forms.DateInput(attrs={'id':"route-date-set", 'data-date-autoclose':"true", "data-auto-close":'true'}, format="%m/%d/%Y"),
         'type': forms.RadioSelect(),
         }
 

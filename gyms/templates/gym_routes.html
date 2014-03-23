@@ -73,7 +73,7 @@
 								</td>
 								<td>{{route.get_grade_display}}</td> 
 								<td>{{route.location}}</td>
-								<td>{{route.setter.initials}}</td>
+								<td>{%if route.setter%}{{route.setter.initials|default:route.setter.username}}{%endif%}</td>
 								<td class="hidden-xs">{{route.score|floatformat:1}}</td> 
 							</tr>
 							{%endfor%}

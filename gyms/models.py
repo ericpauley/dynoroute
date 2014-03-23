@@ -7,6 +7,8 @@ from collections import OrderedDict
 from decimal import Decimal
 from django.contrib.auth import get_user_model
 import datetime
+from hashlib import sha256
+import base64
 
 class DatedMixin(models.Model):
 
@@ -45,7 +47,7 @@ class Gym(DatedMixin):
     location_options = models.TextField(blank=True)
     named_routes = models.BooleanField(default=False)
 
-    logo = models.ImageField(blank=True, upload_to="gym_images")
+    logo = models.ImageField(blank=True, upload_to=lambda self,filename:"gym_images/%s.%s" % (self.slug, filename.split(".")[-1]))
 
     website_url = models.URLField(blank=True)
 
@@ -103,6 +105,13 @@ class RouteManager(models.Manager):
     def get_queryset(self):
         return super(RouteManager, self).get_queryset().annotate(score=models.Avg('rating__score'))
 
+def get_image_name(self, filename):
+        sha = sha256()
+        f = self.image
+        sha.update(f.read())
+        f.close()
+        return "route_images/%s.%s" % (base64.urlsafe_b64encode(sha.digest()).replace("=","_"), filename.split(".")[-1])
+
 class Route(DatedMixin, SluggedMixin):
     name = models.CharField(blank=True, max_length=255)
 
@@ -138,7 +147,7 @@ class Route(DatedMixin, SluggedMixin):
     date_torn = models.DateField(blank=True, null=True)
     gym = models.ForeignKey(Gym, related_name='routes')
     notes = models.TextField(blank=True)
-    image = models.ImageField(blank=True, upload_to="route_images")
+    image = models.ImageField(blank=True, upload_to=get_image_name)
     sends = models.ManyToManyField(settings.AUTH_USER_MODEL, through="Send", related_name="sends")
     favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, through="Favorite", related_name="favorites")
     views = models.IntegerField(default=0)

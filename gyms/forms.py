@@ -10,21 +10,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-class ReadOnlyMixin(ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super(ReadOnlyMixin, self).__init__(*args, **kwargs)
-        for name in self.get_readonly_fields():
-            self.fields[name].widget.attrs['readonly'] = True
-            self.fields[name].widget.attrs['disabled'] = True
-
-    def clean(self):
-        print "egg"
-        for name in self.get_readonly_fields():
-            print name
-            self.cleaned_data[name] = getattr(self.instance, name)
-        return self.cleaned_data
-
 class RouteForm(ModelForm):
 
     location = forms.ChoiceField()

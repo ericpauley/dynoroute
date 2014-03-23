@@ -65,8 +65,10 @@
 										<td class="hidden-xs"><span class="label label-success">Complete</span></td> 
 										{%elif route.status == "in_progress"%}
 										<td class="hidden-xs"><span class="label label-warning">In progress</span></td>
-										{%else%}
+										{%elif route.status == "not_started"%}
 										<td class="hidden-xs"><span class="label label-default">Not Started</span></td>
+										{%elif route.status == "torn"%}
+										<td class="hidden-xs"><span class="label label-danger">Torn</span></td>
 										{%endif%}
 									</tr> 
 									{%endfor%}

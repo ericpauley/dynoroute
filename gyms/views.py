@@ -29,6 +29,7 @@ from django.views.generic.base import ContextMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from gyms.forms import *
 from gyms.models import *
+import datetime
 
 def about(request):
     return render(request, "about.html")
@@ -273,10 +274,19 @@ class AdminRouteAdd(GymFinderMixin, CreateView):
         kwargs = super(AdminRouteAdd, self).get_form_kwargs()
         kwargs['gym'] = self.gym
         kwargs['user'] = self.request.user
+        kwargs['setter'] = self.request.session.get("last_setter")
+        kwargs['location'] = self.request.session.get("last_location")
+        kwargs['date_set'] = self.request.session.get("last_date_set")
         return kwargs
 
     def get_success_url(self):
-        return urlresolvers.reverse("gym_routes_admin", kwargs=dict(gym=self.kwargs['gym']))
+        self.request.session['last_setter'] = self.request.POST['setter']
+        self.request.session['last_location'] = self.request.POST['location']
+        self.request.session['last_date_set'] = self.request.POST['date_set']
+        if "_addanother" in self.request.POST:
+            return urlresolvers.reverse("gym_route_add", kwargs=dict(gym=self.kwargs['gym']))
+        else:
+            return urlresolvers.reverse("gym_routes_admin", kwargs=dict(gym=self.kwargs['gym']))
 
 class AdminRouteEdit(RouteFinderMixin, UpdateView):
 
@@ -292,7 +302,7 @@ class AdminRouteEdit(RouteFinderMixin, UpdateView):
         return kwargs
 
     def get_success_url(self):
-        return urlresolvers.reverse("gym_routes_admin", kwargs=dict(gym=self.kwargs['gym']))
+        return urlresolvers.reverse("gym_routes_admin", kwargs=dict(gym=self.gym.slug))
 
 class GymSettings(UpdateView):
 

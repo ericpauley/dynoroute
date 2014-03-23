@@ -29,15 +29,16 @@ class RouteForm(ModelForm):
 
     location = forms.ChoiceField()
 
-    def __init__(self, gym, user, *args, **kwargs):
+    def __init__(self, gym, user, setter=None, location=None, date_set=None, *args, **kwargs):
         super(RouteForm, self).__init__(*args, **kwargs)
         self.fields['setter'].queryset = gym.staff.filter(level__gte=1000)
-        self.fields['date_set'].initial = timezone.now()
+        self.fields['date_set'].initial = date_set or timezone.now()
         self.fields['status'].initial = 'complete'
         self.fields['type'].initial = 'bouldering'
         self.fields['location'].choices = tuple([(x.strip(),x.strip()) for x in gym.location_options.split('\n')])
+        self.fields['location'].initial = location or self.fields['location'].initial
         self.instance.gym = gym
-        self.fields['setter'].initial = user
+        self.fields['setter'].initial = setter or user
 
     class Meta:
         fields = ['type', 'image', 'grade', 'location', 'date_set', 'setter', 'name', 'notes', 'status', 'color1', 'color2']

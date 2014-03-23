@@ -15,7 +15,7 @@ class GymAdmin(admin.ModelAdmin):
 
 class RouteAdmin(admin.ModelAdmin):
     date_hierarchy = 'created'
-    list_display = ('gym', 'name', 'type', 'setter', 'grade')
+    list_display = ('gym', 'location', 'type', 'setter', 'grade')
 
 admin.site.register(Gym, GymAdmin)
 admin.site.register(Route, RouteAdmin)

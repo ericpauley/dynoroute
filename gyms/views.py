@@ -274,7 +274,7 @@ class AdminRouteAdd(GymFinderMixin, CreateView):
         kwargs = super(AdminRouteAdd, self).get_form_kwargs()
         kwargs['gym'] = self.gym
         kwargs['user'] = self.request.user
-        kwargs['setter'] = self.request.session.get("last_setter")
+        kwargs['setter'] = self.request.session.get("last_setter", False)
         kwargs['location'] = self.request.session.get("last_location")
         kwargs['date_set'] = self.request.session.get("last_date_set")
         return kwargs

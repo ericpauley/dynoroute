@@ -38,7 +38,7 @@ class RouteForm(ModelForm):
         self.fields['location'].choices = tuple([(x.strip(),x.strip()) for x in gym.location_options.split('\n')])
         self.fields['location'].initial = location or self.fields['location'].initial
         self.instance.gym = gym
-        self.fields['setter'].initial = setter or user
+        self.fields['setter'].initial = setter if setter != False else user
 
     class Meta:
         fields = ['type', 'image', 'grade', 'location', 'date_set', 'setter', 'name', 'notes', 'status', 'color1', 'color2']

@@ -2765,6 +2765,11 @@ table.dataTable th:active {
   left: 15px;
   z-index: 21;
 }
+
+#site-logo img {
+  width: 220.2px;
+  height: 50.7px;
+}
 #header {
   background: #222;
   background-image: -webkit-gradient(linear, left 0%, left 100%, from(#3f3f3f), to(#222222));

@@ -8,17 +8,17 @@
 	</li>
 
 	<li class="dropdown">
-    	<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
-        	Dropdown <span class="caret"></span>
-    	</a>
+		<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+			Dropdown <span class="caret"></span>
+		</a>
 
-    	<ul class="dropdown-menu" role="menu">
-	        <li><a href="javascript:;"><i class="fa fa-user"></i>&nbsp;&nbsp;Example #1</a></li>
-	        <li><a href="javascript:;"><i class="fa fa-calendar"></i>&nbsp;&nbsp;Example #2</a></li>
-	        <li class="divider"></li>
-	        <li><a href="javascript:;"><i class="fa fa-tasks"></i>&nbsp;&nbsp;Example #3</a></li>
-    	</ul>
-    </li>
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="javascript:;"><i class="fa fa-user"></i>&nbsp;&nbsp;Example #1</a></li>
+			<li><a href="javascript:;"><i class="fa fa-calendar"></i>&nbsp;&nbsp;Example #2</a></li>
+			<li class="divider"></li>
+			<li><a href="javascript:;"><i class="fa fa-tasks"></i>&nbsp;&nbsp;Example #3</a></li>
+		</ul>
+	</li>
 </ul>-->
 
 <ul class="nav navbar-nav pull-right">
@@ -26,43 +26,52 @@
 		{%if user.is_authenticated%}
 		<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
 			<i class="fa fa-user"></i>
-        	{{user.get_full_name|default:user.username}}
-        	<span class="caret"></span>
-    	</a>
-    	{%else%}
-    	<a class="dropdown-toggle" href="{%url 'account_login'%}?next={{request.path|urlencode}}">
+			{{user.get_full_name|default:user.username}}
+			<span class="caret"></span>
+		</a>
+		{%else%}
+		<a class="dropdown-toggle" href="{%url 'account_login'%}?next={{request.path|urlencode}}">
 			<i class="fa fa-user"></i>
-        	Log In
-    	</a>
-    	{%endif%}
+			Log In
+		</a>
+		{%endif%}
 
-    	<ul class="dropdown-menu" role="menu">
-	        <li>
-	        	<a href="{%if user.gym%}{%url 'gym_dashboard' gym=user.gym.slug%}{%else%}{%url 'dashboard'%}{%endif%}">
-	        		<i class="fa fa-dashboard"></i> 
-	        		&nbsp;&nbsp;Dashboard
-	        	</a>
-	        </li>
-	        <li>
-	        	<a href="{%url 'account_change_password'%}">
-	        		<i class="fa fa-cogs"></i> 
-	        		&nbsp;&nbsp;Change Password
-	        	</a>
-	        </li>
-	        <li class="divider"></li>
-	        <li>
-                {%if logout_next%}
-                <a href="{%url 'account_logout'%}?next={{logout_next|urlencode}}">
-                    <i class="fa fa-sign-out"></i> 
-                    &nbsp;&nbsp;Logout
-                </a>
-                {%else%}
-	        	<a href="{%url 'account_logout'%}?next={{request.path|urlencode}}">
-	        		<i class="fa fa-sign-out"></i> 
-	        		&nbsp;&nbsp;Logout
-	        	</a>
-                {%endif%}
-	        </li>
-    	</ul>
-    </li>
+		<ul class="dropdown-menu" role="menu">
+			{%if user.gym and user.perms.admin_view%}
+			<li>
+				<a href="{%url 'gym_dashboard' gym=user.gym.slug%}">
+					<i class="fa fa-dashboard"></i> 
+					&nbsp;&nbsp;Dashboard
+				</a>
+			</li>
+			{%elif not user.gym%}
+			<li>
+				<a href="{%url 'dashboard'%}">
+					<i class="fa fa-dashboard"></i> 
+					&nbsp;&nbsp;Dashboard
+				</a>
+			</li>
+			{%endif%}
+			<li>
+				<a href="{%url 'account_change_password'%}">
+					<i class="fa fa-cogs"></i> 
+					&nbsp;&nbsp;Change Password
+				</a>
+			</li>
+			<li class="divider"></li>
+			<li>
+				{%if logout_next%}
+				<a href="{%url 'account_logout'%}?next={{logout_next|urlencode}}">
+					<i class="fa fa-sign-out"></i> 
+					&nbsp;&nbsp;Logout
+				</a>
+				{%else%}
+				<a href="{%url 'account_logout'%}?next={{request.path|urlencode}}">
+					<i class="fa fa-sign-out"></i> 
+					&nbsp;&nbsp;Logout
+				</a>
+				{%endif%}
+			</li>
+		</ul>
+	</li>
 </ul>

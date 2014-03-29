@@ -57,8 +57,10 @@
                                     {{employee.email}}
                                 </td>
                                 <td class="">
+                                    {% if user.perms == "owner" or user.perms > employee.perms%}
                                     <a href="{%url 'gym_staff_update' gym=gym.slug user=employee.username%}">Edit</a>
-                                    {%if employee.level != 10000%}
+                                    {%endif%}
+                                    {%if user.perms > employee.perms%}
                                      | <a href="{%url 'gym_staff_delete' gym=gym.slug user=employee.username%}">Delete</a>
                                     {%endif%}
                                 </td>

@@ -75,10 +75,12 @@ class EmployeeCreationForm(UserCreationForm):
         model = User
         fields = ('username', 'name', 'level', 'email')
 
-    def __init__(self, gym, *args, **kwargs):
+    def __init__(self, gym, user, *args, **kwargs):
         super(EmployeeCreationForm, self).__init__(*args, **kwargs)
         self.instance.gym = gym
         self.fields['level'].choices = self.fields['level'].choices[2:]
+        if user.perms == "manager":
+            self.fields['level'].choices = self.fields['level'].choices[1:]
 
     def get_readonly_fields(self):
         return []

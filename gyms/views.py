@@ -30,6 +30,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from gyms.forms import *
 from gyms.models import *
 import datetime
+from users.models import *
 
 def about(request):
     return render(request, "about.html")
@@ -41,6 +42,7 @@ def gym_list(request):
 class GymFinderMixin(ContextMixin):
 
     perms = None
+    perms_check = None
 
     @property 
     def gym(self):
@@ -54,8 +56,10 @@ class GymFinderMixin(ContextMixin):
         if self.perms is not None:
             if request.user.is_anonymous():
                 return shortcuts.redirect("%s?next=%s" % (urlresolvers.reverse("gym_login", kwargs={'gym':self.gym.slug}), urlquote(request.path)))
-            elif not (request.user.gym == self.gym and request.user.level >= self.perms):
+            elif not (request.user.gym == self.gym and getattr(request.user.perms, self.perms)):
                 raise Http404()
+        if self.perms_check is not None:
+            self.perms_check()
         return super(GymFinderMixin, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -144,7 +148,7 @@ class RoutesPage(GymFinderMixin, ListView):
 
 class AdminRoutesPage(RoutesPage):
 
-    perms = 500
+    perms = "admin_view"
 
     template_name = "gym_routes_admin.html"
 
@@ -231,7 +235,7 @@ class RouteAJAX(JSONResponseMixin, RouteFinderMixin, View):
 
 class GymDashboard(GymPage):
 
-    perms = 500
+    perms = "admin_view"
 
     template_name="gym_dashboard.html"
 
@@ -242,7 +246,7 @@ class GymDashboard(GymPage):
 
 class GymStats(JSONResponseMixin, GymFinderMixin, DetailView):
 
-    perms = 500
+    perms = "admin_view"
 
     def split(self, d):
         return [dict(label=k, data=v) for k,v in d.items()]
@@ -266,7 +270,7 @@ class AdminRouteAdd(GymFinderMixin, CreateView):
 
     model = Route
 
-    perms = 1000
+    perms = "routes_manage"
 
     form_class = RouteForm
 
@@ -290,7 +294,7 @@ class AdminRouteAdd(GymFinderMixin, CreateView):
 
 class AdminRouteEdit(RouteFinderMixin, UpdateView):
 
-    perms = 1000
+    perms = "routes_manage"
     template_name = 'gyms/route_update_form.html'
 
     form_class = RouteForm
@@ -304,21 +308,19 @@ class AdminRouteEdit(RouteFinderMixin, UpdateView):
     def get_success_url(self):
         return urlresolvers.reverse("gym_routes_admin", kwargs=dict(gym=self.gym.slug))
 
-class GymSettings(UpdateView):
+class GymSettings(GymFinderMixin, UpdateView):
 
-    perms = 10000
+    perms = "owner"
     
     template_name="gym_settings.html"
     form_class = GymSettingsForm
-    model = Gym
-    slug_url_kwarg = "gym"
 
     def get_success_url(self):
         return urlresolvers.reverse("gym_dashboard", kwargs=dict(gym=self.kwargs['gym']))
 
 class AdminStaffPage(GymFinderMixin, ListView):
 
-    perms = 10000
+    perms = "staff_manage"
 
     template_name = "gym_staff_admin.html"
 
@@ -327,15 +329,13 @@ class AdminStaffPage(GymFinderMixin, ListView):
 
 class EmployeeFinderMixin(GymFinderMixin):
 
-    no_owner = False
-
     @property 
     def employee(self):
         try:
             employee = self._employee
         except AttributeError:
             employee = self._employee = get_object_or_404(self.gym.staff, username=self.kwargs['user'])
-        if self.no_owner and employee.level == 10000:
+        if self.request.user.perms == Manager and employee.perms >= Manager:
             raise Http404
         return employee
 
@@ -349,7 +349,7 @@ class EmployeeFinderMixin(GymFinderMixin):
 
 class AdminEmployeeAdd(GymFinderMixin, CreateView):
 
-    perms = 10000
+    perms = "staff_manage"
 
     form_class = EmployeeCreationForm
     template_name="gyms/employee_form.html"
@@ -357,6 +357,7 @@ class AdminEmployeeAdd(GymFinderMixin, CreateView):
     def get_form_kwargs(self):
         kwargs = super(AdminEmployeeAdd, self).get_form_kwargs()
         kwargs['gym'] = self.gym
+        kwargs['user'] = self.request.user
         return kwargs
 
     def get_success_url(self):
@@ -364,7 +365,7 @@ class AdminEmployeeAdd(GymFinderMixin, CreateView):
 
 class AdminEmployeeUpdate(EmployeeFinderMixin, UpdateView):
 
-    perms = 10000
+    perms = "staff_manage"
 
     form_class = EmployeeUpdateForm
     template_name="gyms/employee_update_form.html"
@@ -372,6 +373,7 @@ class AdminEmployeeUpdate(EmployeeFinderMixin, UpdateView):
     def get_form_kwargs(self):
         kwargs = super(AdminEmployeeUpdate, self).get_form_kwargs()
         kwargs['gym'] = self.gym
+        kwargs['user'] = self.request.user
         return kwargs
 
     def get_success_url(self):
@@ -379,9 +381,11 @@ class AdminEmployeeUpdate(EmployeeFinderMixin, UpdateView):
 
 class AdminEmployeeDelete(EmployeeFinderMixin, DeleteView):
 
-    no_owner = True
+    def perms_check(self):
+        if self.employee.perms.owner:
+            raise Http404
 
-    perms = 10000
+    perms = "staff_manage"
 
     template_name = "gyms/employee_confirm_delete.html"
 

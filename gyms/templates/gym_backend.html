@@ -27,25 +27,31 @@
 				Dashboard
 			</a>				
 		</li>
+		{% if user.perms.routes_view %}
 		<li {%if request.resolver_match.url_name == "gym_routes_admin"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_routes_admin' gym=gym.slug%}">
 				<i class="fa fa-briefcase"></i>
 				Routes
 			</a>				
 		</li>
+		{%endif%}
+		{% if user.perms.routes_manage%}
 		<li {%if request.resolver_match.url_name == "gym_route_add"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_route_add' gym=gym.slug%}">
 				<i class="fa fa-plus"></i>
 				Add Route
 			</a>				
 		</li>
-		{%if user.level >= 10000%}
+		{%endif%}
+		{%if user.perms.staff_manage%}
 		<li {%if request.resolver_match.url_name == "gym_staff_admin"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_staff_admin' gym=gym.slug%}">
 				<i class="fa fa-users"></i>
 				Gym Staff
 			</a>				
 		</li>
+		{%endif%}
+		{%if user.perms.owner%}
 		<li {%if request.resolver_match.url_name == "gym_settings"%}class="active"{%endif%}>				
 			<a href="{%url 'gym_settings' gym=gym.slug%}">
 				<i class="fa fa-cogs"></i>

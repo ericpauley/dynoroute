@@ -48,7 +48,7 @@ ROUTE = "{{route.slug}}"
 				Go to Gym's Site
 			</a>				
 		</li>
-		{%if user.gym%}
+		{%if user.gym and user.perms.admin_view%}
 		<li>				
 			<a href="{%url 'gym_dashboard' gym=user.gym.slug%}">
 				<i class="fa fa-sign-in"></i>

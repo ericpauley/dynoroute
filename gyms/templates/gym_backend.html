@@ -3,7 +3,7 @@
 {%load gym_extras %}
 {%block logo%}
 <h1 id="site-logo">
-	<a href="/grg/admin">
+	<a href="{%url 'gym_dashboard' gym=gym.slug%}">
 		<img src="{%if gym.logo%}{{gym.logo.url}}{%else%}{% static 'img/logos/logo.png' %}{%endif%}" alt="Site Logo" width="195" height="40" />
 	</a>
 </h1>

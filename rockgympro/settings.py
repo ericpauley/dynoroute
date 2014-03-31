@@ -50,6 +50,8 @@ INSTALLED_APPS = (
     'debug_toolbar'
 )
 
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
 SITE_ID = 1
 
 AUTH_USER_MODEL = "users.User"
@@ -64,6 +66,7 @@ ACCOUNT_ADAPTER = "gyms.adapter.GymAccountAdapter"
 ACCOUNT_LOGOUT_ON_GET = True
 
 MIDDLEWARE_CLASSES = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

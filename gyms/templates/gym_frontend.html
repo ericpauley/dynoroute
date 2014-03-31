@@ -12,7 +12,7 @@ ROUTE = "{{route.slug}}"
 
 {%block logo%}
 <h1 id="site-logo">
-	<a href="/grg">
+	<a href="{%url 'gym_page' gym=gym.slug%}">
 		<img src="{%if gym.logo%}{{gym.logo.url}}{%else%}{% static 'img/logos/logo.png' %}{%endif%}" alt="Site Logo" width="195" height="40" />
 	</a>
 </h1>
@@ -82,8 +82,8 @@ ROUTE = "{{route.slug}}"
 		{%endif%}
 	</div>
 	<div class="pull-right gym-info-right">
-		<h3>352-335-4789</h3>
-		<h5>704 South Main Street<br/>Gainesville, FL 32601</h5>
+		<h3>{{gym.phone|linebreaks}}</h3>
+		<h5>{{gym.address|linebreaks}}</h5>
 	</div>
 </div> <!-- #content-header -->	
 {%endblock%}

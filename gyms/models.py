@@ -36,6 +36,12 @@ class GymManager(models.Manager):
     def get_queryset(self):
         return super(GymManager, self).get_queryset()
 
+def logo_upload(self, filename):
+    return "gym_images/%s.%s" % (self.slug, filename.split(".")[-1])
+
+def about_image_upload(self, filename):
+    return "gym_about_images/%s.%s" % (self.slug, filename.split(".")[-1])
+
 class Gym(DatedMixin):
 
     objects = GymManager()
@@ -47,9 +53,13 @@ class Gym(DatedMixin):
     location_options = models.TextField(blank=True)
     named_routes = models.BooleanField(default=False)
 
-    logo = models.ImageField(blank=True, upload_to=lambda self,filename:"gym_images/%s.%s" % (self.slug, filename.split(".")[-1]))
+    logo = models.ImageField(blank=True, upload_to=logo_upload)
 
     website_url = models.URLField(blank=True)
+    phone = models.CharField(blank=True, null=True, max_length=255)
+    address = models.TextField(blank=True, null=True)
+    desc = models.TextField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True, upload_to=about_image_upload)
 
     def __unicode__(self):
         return self.name

@@ -144,7 +144,7 @@ class RoutesPage(GymFinderMixin, ListView):
         return context
 
     def get_queryset(self):
-        return self.gym.routes.filter(status="complete").order_by(self.get_sort())
+        return self.gym.routes.filter(status="complete").order_by(self.get_sort()).select_related('setter')
 
 class AdminRoutesPage(RoutesPage):
 
@@ -153,7 +153,7 @@ class AdminRoutesPage(RoutesPage):
     template_name = "gym_routes_admin.html"
 
     def get_queryset(self):
-        return self.gym.routes.order_by(self.get_sort())
+        return self.gym.routes.order_by(self.get_sort()).select_related('setter')
 
 class RouteFinderMixin(GymFinderMixin):
 
@@ -241,7 +241,7 @@ class GymDashboard(GymPage):
 
     def get_context_data(self, **kwargs):
         context = super(GymDashboard, self).get_context_data(**kwargs)
-        context['routes'] = self.gym.routes.order_by("-created")[:5]
+        context['routes'] = self.gym.routes.order_by("-created").select_related('setter')[:5]
         return context
 
 class GymStats(JSONResponseMixin, GymFinderMixin, DetailView):

@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'allauth',
     'allauth.account',
+    'debug_toolbar'
 )
 
 SITE_ID = 1

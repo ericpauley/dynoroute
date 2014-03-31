@@ -16,7 +16,7 @@ perms = [
 ]
 
 @functools.total_ordering
-class EmployeeBase(object):
+class EmployeeBase(str):
 
     def __getattr__(self, key):
         try:
@@ -26,12 +26,6 @@ class EmployeeBase(object):
                 return None
             else:
                 raise AttributeError
-
-    def __str__(self):
-        return self.name
-
-    def __unicode__(self):
-        return self.name
 
     def __gt__(self, other):
         try:
@@ -46,43 +40,37 @@ class EmployeeBase(object):
             return self == levels[other.lower()]
 
 class Employee(EmployeeBase):
-
-    name = "Employee"
     level = 500
     admin_view = True
     routes_view = True
 
 class Setter(Employee):
 
-    name = "Setter"
     level = 1000
 
     routes_manage = True
 
 class Manager(Setter):
 
-    name = "Manager"
     level = 5000
     staff_manage = True
 
 class HeadCoach(EmployeeBase):
 
-    name = "Head Coach"
     level = 900
     team_admin_view = True
 
 class Owner(Manager, HeadCoach):
 
-    name = "Owner"
     level = 10000
     owner = True
 
 levels = {
-    "employee": Employee(),
-    "setter": Setter(),
-    "manager": Manager(),
-    "headcoach": HeadCoach(),
-    "owner": Owner(),
+    "employee": Employee("Employee"),
+    "setter": Setter("Setter"),
+    "manager": Manager("Manager"),
+    "headcoach": HeadCoach("Head Coach"),
+    "owner": Owner("Owner"),
 }
 
 class UserManager(UserManager):
@@ -117,11 +105,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     gym = models.ForeignKey('gyms.Gym', related_name="staff", blank=True, null=True)
 
     MEMBERSHIP_LEVELS = (
-        (10000, levels["owner"]),
-        (5000, levels["manager"]),
-        (1000, levels["setter"]),
-        (500, levels["employee"]),
-        (900, levels["headcoach"]),
+        (10000, "Owner"),
+        (5000, "Manager"),
+        (1000, "Setter"),
+        (500, "Employee"),
+        (900, "Head Coach"),
     )
     level = models.IntegerField(choices=MEMBERSHIP_LEVELS, blank=True, null=True)
 
@@ -135,7 +123,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def perms(self):
-        return dict(self.MEMBERSHIP_LEVELS)[self.level]
+        for k,v in levels.items():
+            if v.level == self.level:
+                return v
+        return None
 
     def get_username(self):
         if self.gym is not None:

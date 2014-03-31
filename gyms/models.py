@@ -129,12 +129,14 @@ class Route(DatedMixin, SluggedMixin):
 
     TYPE_CHOICES = (
         ('top_rope', 'Top Rope'),
-        ('bouldering', 'Bouldering')
+        ('bouldering', 'Bouldering'),
+        ('lead', 'Lead')
     )
 
     GRADE_CHOICES = (
         ('Top Rope', []),
         ('Bouldering', []),
+        ('Lead', []),
     )
 
     for i in range(5,16):
@@ -143,6 +145,13 @@ class Route(DatedMixin, SluggedMixin):
         GRADE_CHOICES[0][1].append((Decimal(i), "5.%s" % i))
         if i >= 9:
             GRADE_CHOICES[0][1].append((Decimal(i+.25), "5.%s+" % i))
+
+    for i in range(5,16):
+        if i > 9:
+            GRADE_CHOICES[2][1].append((Decimal(i-.25), "5.%s-" % i))
+        GRADE_CHOICES[2][1].append((Decimal(i), "5.%s" % i))
+        if i >= 9:
+            GRADE_CHOICES[2][1].append((Decimal(i+.25), "5.%s+" % i))
 
     for i in range(0,14):
         GRADE_CHOICES[1][1].append((Decimal(1000+i-.25), "V%s-" % i))

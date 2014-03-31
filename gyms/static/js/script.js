@@ -43,27 +43,28 @@ $.ajaxSetup({
     }
 });
 
+slots = {}
 
-var topRopeLabel;
-var topRopeParent;
-var topRopeOptions;
-
-var boulderLabel;
-var boulderParent;
-var boulderOptions;
+function daClick(){
+    $("[name='type']").each(function(){
+        var name = $.trim($(this).parent().text());
+        $("[label='"+name+"']").detach()
+    })
+    var name = $.trim($(this).parent().text());
+    $("#id_grade").append(slots[name])
+}
 
 $(function () {
 
-	topRopeLabel = $("[label='Top Rope']");
-	topRopeParent = topRopeLabel.parent();
-	topRopeOptions = $("[label='Top Rope']").children();
+    $("[name='type']").each(function(){
+        var name = $.trim($(this).parent().text());
+        slots[name] = $("[label='"+name+"']");
+        $("[label='"+name+"']").detach()
+    })
 
-	boulderLabel = $("[label='Bouldering']");
-	boulderParent = boulderLabel.parent();
-	boulderOptions = $("[label='Bouldering']").children();
+    $("[name='type']").click(daClick)
 
-	$("[label='Top Rope']").detach();
-	$("[label='Top Rope']").children().detach();
+    $("[name='type']:checked").click()
 
 	$('#route-date-set').datepicker ()
 
@@ -74,22 +75,6 @@ $(function () {
 		picker: true
 	});
 
-});
-
-$("#id_type_1").click(function() {
-	$("[label='Top Rope']").detach();
-	$("[label='Top Rope']").children().detach();
-
-	boulderParent.append(boulderLabel);
-	boulderLabel.append(boulderOptions);
-});
-
-$("#id_type_0").click(function() {
-	$("[label='Bouldering']").detach();
-	$("[label='Bouldering']").children().detach();
-
-	topRopeParent.append(topRopeLabel);
-	topRopeLabel.append(topRopeOptions);
 });
 
 $("#route-rate").raty({

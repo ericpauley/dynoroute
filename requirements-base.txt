@@ -1,9 +1,9 @@
 https://www.djangoproject.com/download/1.7b1/tarball/
-django-bootstrap3
-django-allauth
+django-bootstrap3>=4.0.1
+django-allauth>=0.16.1
 https://github.com/django-debug-toolbar/django-debug-toolbar/archive/master.zip
-python-memcached
+python-memcached>=1.53
 https://bitbucket.org/russmo/django-storages-multi/get/default.zip
-boto
-django-ses
-pillow
+boto>=2.27.0
+django-ses>=0.6.0
+pillow>=2.4.0

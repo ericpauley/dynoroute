@@ -56,7 +56,7 @@
 							</td>
 							<td>{{route.get_grade_display}}</td> 
 							<td>{{route.location}}</td>
-							<td class="hidden-xs">{{route.setter.initials}}</td>
+							<td class="hidden-xs">{{route.setter.display}}</td>
 							<td class="hidden-xs">{{fav.created|date:"SHORT_DATE_FORMAT"}}</td>
 						</tr>
 						{%endwith%}
@@ -118,7 +118,7 @@
 							</td>
 							<td>{{route.get_grade_display}}</td> 
 							<td>{{route.location}}</td>
-							<td class="hidden-xs">{{route.setter.initials}}</td>
+							<td class="hidden-xs">{{route.setter.display}}</td>
 							<td class="hidden-xs">{{send.created|date:"SHORT_DATE_FORMAT"}}</td>
 						</tr>
 						{%endwith%}

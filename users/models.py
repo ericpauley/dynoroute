@@ -102,6 +102,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                     'active. Unselect this instead of deleting accounts.'))
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
+    nickname = models.CharField(max_length=32, blank=True, null=True)
+
     gym = models.ForeignKey('gyms.Gym', related_name="staff", blank=True, null=True)
 
     MEMBERSHIP_LEVELS = (
@@ -137,6 +139,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def clean(self):
          if self.gym and not self.level:
             self.level = 500
+
+    def display(self):
+        return self.nickname or self.initials() or self.username
 
     def initials(self):
         return "".join([part[:1] for part in self.name.split()])

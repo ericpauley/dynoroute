@@ -60,7 +60,7 @@
 										</td>
 										<td>{{route.get_grade_display}}</td> 
 										<td>{{route.location}}</td>
-										<td>{%if route.setter%}{{route.setter.initials}}{%endif%}</td>
+										<td>{%if route.setter%}{{route.setter.display}}{%endif%}</td>
 										{%if route.status == "complete"%}
 										<td class="hidden-xs"><span class="label label-success">Complete</span></td> 
 										{%elif route.status == "in_progress"%}

@@ -130,7 +130,7 @@ class Route(DatedMixin, SluggedMixin):
     TYPE_CHOICES = (
         ('top_rope', 'Top Rope'),
         ('bouldering', 'Bouldering'),
-        ('lead', 'Lead')
+        ('lead', 'Lead'),
     )
 
     GRADE_CHOICES = (

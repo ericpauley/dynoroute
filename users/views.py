@@ -7,14 +7,17 @@ from django.views.generic import DetailView
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
-def home(request):
+def landing(request):
     if request.user.is_authenticated():
         if request.user.gym is not None:
             return redirect("gym_dashboard", gym=request.user.gym.slug)
         else:
             return redirect("dashboard")
     else:
-        return render(request, "launch.html")
+        return redirect("home")
+
+def home(request):
+    return render(request, "launch.html")
 
 @login_required
 def dashboard(request):

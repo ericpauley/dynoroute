@@ -35,6 +35,44 @@
                 About
             </a>        
         </li>
+        {%if user.is_authenticated%}
+        {%if not user.gym%}
+        <li {%if request.resolver_match.url_name == "dashboard"%}class="active"{%endif%}>
+            <a href="{%url 'dashboard'%}">
+                <i class="fa fa-dashboard"></i>
+                Your Dashboard
+            </a>
+        </li>
+        <li {%if request.resolver_match.url_name == "favorites"%}class="active"{%endif%}>
+            <a href="{%url 'favorites'%}">
+                <i class="fa fa-heart"></i>
+                Favorite Routes
+            </a>
+        </li>
+        <li {%if request.resolver_match.url_name == "sends"%}class="active"{%endif%}>
+            <a href="{%url 'sends'%}">
+                <i class="fa fa-book"></i>
+                Sent Routes
+            </a>
+        </li>
+        {%endif%}
+        {%for gym in user.gyms.all%}
+        <li>
+            <a href="{%url 'gym_page' gym=gym.slug%}">
+                <i class="fa fa-building-o"></i>
+                {{gym.name}}
+            </a>
+        </li>
+        {%endfor%}
+        {%if user.gym%}
+        <li>
+            <a href="{%url 'gym_dashboard' gym=user.gym.slug%}">
+                <i class="fa fa-dashboard"></i>
+                {{user.gym.name}}
+            </a>
+        </li>
+        {%endif%}
+        {%endif%}
     </ul>
 </nav>
 {%endblock%}

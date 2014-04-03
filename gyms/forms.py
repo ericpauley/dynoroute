@@ -1,4 +1,4 @@
-from gyms.models import Route, Gym
+from gyms.models import Route, Gym, rating_scales
 from django.forms import ModelForm
 from users.models import User
 from django.utils import timezone
@@ -13,6 +13,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 class RouteForm(ModelForm):
 
     location = forms.ChoiceField()
+    grade = forms.ChoiceField()
 
     def __init__(self, gym, user, setter=None, location=None, date_set=None, *args, **kwargs):
         super(RouteForm, self).__init__(*args, **kwargs)
@@ -23,7 +24,13 @@ class RouteForm(ModelForm):
         self.fields['location'].choices = tuple([(x.strip(),x.strip()) for x in gym.location_options.split('\n')])
         self.fields['location'].initial = location or self.fields['location'].initial
         self.instance.gym = gym
+        self.instance.grade = self.instance.get_grade()
         self.fields['setter'].initial = setter if setter != False else user
+        self.fields['grade'].choices = (
+            ("Top Rope", [(None, "---------")] + rating_scales[gym.top_rope_format]),
+            ("Lead", [(None, "---------")] +  rating_scales[gym.lead_format]),
+            ("Bouldering", [(None, "---------")] + rating_scales[gym.bouldering_format]),
+        )
 
     class Meta:
         fields = ['type', 'image', 'grade', 'location', 'date_set', 'setter', 'name', 'notes', 'status', 'color1', 'color2']
@@ -40,7 +47,7 @@ class RouteForm(ModelForm):
 class GymSettingsForm(ModelForm):
 
     class Meta:
-        fields = ['name', 'named_routes', 'location_options']
+        fields = ['name', 'named_routes', 'location_options', 'top_rope_format', 'lead_format', 'bouldering_format']
         model=Gym
 
 class GymAuthForm(AuthenticationForm):

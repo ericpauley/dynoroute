@@ -42,6 +42,49 @@ def logo_upload(self, filename):
 def about_image_upload(self, filename):
     return "gym_about_images/%s.%s" % (self.slug, filename.split(".")[-1])
 
+rating_scales = {}
+
+def build_ratings():
+    scale = []
+    for i in range(5,16):
+        
+        if i > 9:
+            scale.append((Decimal(i-.25), "5.%s-" % i))
+        scale.append((Decimal(i), "5.%s" % i))
+        if i >= 9:
+            scale.append((Decimal(i+.25), "5.%s+" % i))
+    rating_scales['yds_plusminus'] = scale
+
+    scale = []
+    for i in range(5,16):
+        if i > 9:
+            scale.append((Decimal(i), "5.%sa" % i))
+            scale.append((Decimal(i+.25), "5.%sb" % i))
+            scale.append((Decimal(i+.5), "5.%sc" % i))
+            if i < 15:
+                scale.append((Decimal(i-.75), "5.%sd" % i))
+        else:
+            scale.append((Decimal(i), "5.%s" % i))
+
+    rating_scales['yds_abcd'] = scale
+
+    scale = []
+    for i in range(0,14):
+        scale.append((Decimal(1000+i-.25), "V%s-" % i))
+        scale.append((Decimal(1000+i), "V%s" % i))
+        scale.append((Decimal(1000+i+.25), "V%s+" % i))
+
+    rating_scales['hueco'] = scale
+
+    rating_scales['riao'] = [
+        (1001, "REC"),
+        (1004, "INT"),
+        (1007, "ADV"),
+        (1010, "OPEN"),
+    ]
+
+build_ratings()
+
 class Gym(DatedMixin):
 
     objects = GymManager()
@@ -60,6 +103,20 @@ class Gym(DatedMixin):
     address = models.TextField(blank=True, null=True)
     desc = models.TextField(blank=True, null=True)
     image = models.ImageField(blank=True, null=True, upload_to=about_image_upload)
+
+    TOP_ROPE_FORMAT_CHOICES = (
+        ("yds_abcd", "YDS ABCD"),
+        ("yds_plusminus", "YDS +/-"),
+    )
+
+    BOULDERING_FORMAT_CHOICES = (
+        ("hueco", "Hueco"),
+        ("riao", "RIAO"),
+    )
+
+    top_rope_format = models.CharField(max_length=16, choices=TOP_ROPE_FORMAT_CHOICES, default="yds_plusminus")
+    lead_format = models.CharField(max_length=16, choices=TOP_ROPE_FORMAT_CHOICES, default="yds_plusminus")
+    bouldering_format = models.CharField(max_length=16, choices=BOULDERING_FORMAT_CHOICES, default="hueco")
 
     def __unicode__(self):
         return self.name
@@ -133,33 +190,8 @@ class Route(DatedMixin, SluggedMixin):
         ('lead', 'Lead'),
     )
 
-    GRADE_CHOICES = (
-        ('Top Rope', []),
-        ('Bouldering', []),
-        ('Lead', []),
-    )
-
-    for i in range(5,16):
-        if i > 9:
-            GRADE_CHOICES[0][1].append((Decimal(i-.25), "5.%s-" % i))
-        GRADE_CHOICES[0][1].append((Decimal(i), "5.%s" % i))
-        if i >= 9:
-            GRADE_CHOICES[0][1].append((Decimal(i+.25), "5.%s+" % i))
-
-    for i in range(5,16):
-        if i > 9:
-            GRADE_CHOICES[2][1].append((Decimal(i-.25), "5.%s-" % i))
-        GRADE_CHOICES[2][1].append((Decimal(i), "5.%s" % i))
-        if i >= 9:
-            GRADE_CHOICES[2][1].append((Decimal(i+.25), "5.%s+" % i))
-
-    for i in range(0,14):
-        GRADE_CHOICES[1][1].append((Decimal(1000+i-.25), "V%s-" % i))
-        GRADE_CHOICES[1][1].append((Decimal(1000+i), "V%s" % i))
-        GRADE_CHOICES[1][1].append((Decimal(1000+i+.25), "V%s+" % i))
-
     type = models.CharField(choices=TYPE_CHOICES, max_length=16, blank=False, default="bouldering")
-    grade = models.DecimalField(choices=GRADE_CHOICES, blank=False, max_digits=10, decimal_places=2)
+    grade = models.DecimalField(blank=False, max_digits=10, decimal_places=2)
     setter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='routes', blank=True, null=True)
     location = models.CharField(max_length=32)
     date_set = models.DateField(default=datetime.date.today())
@@ -177,6 +209,20 @@ class Route(DatedMixin, SluggedMixin):
         ('not_started', 'Not Started'),
         ('torn', 'Torn'),
     )
+
+    def get_grade(self):
+        if self.grade is None:
+            return None
+        format = getattr(self.gym, "%s_format" % self.type)
+        grade_list = sorted(rating_scales[format], key=lambda x:abs(x[0]-self.grade))
+        return grade_list[0][0]
+
+    def get_grade_display(self):
+        if self.grade is None:
+            return None
+        format = getattr(self.gym, "%s_format" % self.type)
+        grade_list = sorted(rating_scales[format], key=lambda x:abs(x[0]-self.grade))
+        return grade_list[0][1]
 
     status = models.CharField(choices=STATUS_CHOICES, max_length=16, blank=False, default="complete")
 

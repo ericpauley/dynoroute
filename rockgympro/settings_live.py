@@ -12,12 +12,12 @@ DATABASES = {
     },
 }
 
-CACHES = {
+'''CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': os.environ['CACHE_URL'],
     }
-}
+}'''
 
 DEFAULT_FROM_EMAIL = "noreply@dynoroute.com"
 
@@ -38,7 +38,7 @@ DEBUG_TOOLBAR_PANELS = [
 
 INSTALLED_APPS += ('storages',)
 
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+#SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3botomulti.S3BotoStorage_media'
 STATICFILES_STORAGE = 'storages.backends.s3botomulti.S3BotoStorage_static'

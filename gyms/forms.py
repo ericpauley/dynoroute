@@ -31,14 +31,20 @@ class RouteForm(ModelForm):
             ("Lead", [(None, "---------")] +  rating_scales[gym.lead_format]),
             ("Bouldering", [(None, "---------")] + rating_scales[gym.bouldering_format]),
         )
+        self.fields['grade'].initial = self.instance.grade
+        if gym.tape_colors < 2:
+            del self.fields['color2']
+        if gym.tape_colors < 3:
+            del self.fields['color3']
 
     class Meta:
-        fields = ['type', 'image', 'grade', 'location', 'date_set', 'setter', 'name', 'notes', 'status', 'color1', 'color2']
+        fields = ['type', 'image', 'grade', 'location', 'date_set', 'setter', 'name', 'notes', 'status', 'color1', 'color2', 'color3']
         model = Route
         widgets = {
         'notes': forms.Textarea(attrs={'rows':3, 'cols':10}),
-        'color1': forms.Select(attrs=dict(id="route-color")),
-        'color2': forms.Select(attrs=dict(id="route-color2")),
+        'color1': forms.Select(attrs={"data-widget":"color-widget"}),
+        'color2': forms.Select(attrs={"data-widget":"color-widget"}),
+        'color3': forms.Select(attrs={"data-widget":"color-widget"}),
         'image': forms.FileInput(),
         'date_set': forms.DateInput(attrs={'id':"route-date-set", 'data-date-autoclose':"true", "data-auto-close":'true'}, format="%m/%d/%Y"),
         'type': forms.RadioSelect(),
@@ -47,7 +53,7 @@ class RouteForm(ModelForm):
 class GymSettingsForm(ModelForm):
 
     class Meta:
-        fields = ['name', 'named_routes', 'location_options', 'top_rope_format', 'lead_format', 'bouldering_format']
+        fields = ['name', 'named_routes', 'location_options', 'top_rope_format', 'lead_format', 'bouldering_format', 'tape_colors']
         model=Gym
 
 class GymAuthForm(AuthenticationForm):

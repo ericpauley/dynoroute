@@ -68,8 +68,9 @@
 							<tr onclick="document.location = '{%url 'gym_route' gym=gym.slug route=route.slug%}'" class="clickable">
 								{%if gym.named_routes%}<td class="hidden-xs">{{route.name}}</td>{%endif%} 
 								<td class="align-center"> 
-									{%if route.color1 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color1}}"></div>{%endif%}
-									{%if route.color2 != "#ffffff"%}<div class="color-box" style="background-color:{{route.color2}}"></div>{%endif%}
+									{%for color in route.colors%}
+									<div class="color-box" style="background-color:{{color}}"></div>
+									{%endfor%}
 								</td>
 								<td>{{route.get_grade_display}}</td> 
 								<td>{{route.location}}</td>

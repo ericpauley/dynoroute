@@ -68,10 +68,7 @@ $(function () {
 
 	$('#route-date-set').datepicker ()
 
-	$('#route-color').simplecolorpicker({
-		picker: true
-	});
-	$('#route-color2').simplecolorpicker({
+	$('[data-widget=color-widget]').simplecolorpicker({
 		picker: true
 	});
 

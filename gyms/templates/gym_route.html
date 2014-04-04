@@ -75,8 +75,7 @@
 				<div class="col-md-8 col-sm-7">
 					{%if route.name%}<div id="route-title">{{route.name}}</div>{%endif%}
 					<div id="route-title">{{route.get_grade_display}}</div>
-					{%if route.color1 != "#ffffff"%}<div class="color-box-lg" style="background-color:{{route.color1}}"></div>{%endif%}
-					{%if route.color2 != "#ffffff"%}<div class="color-box-lg" style="background-color:{{route.color2}}"></div>{%endif%}
+					{%for color in route.colors%}<div class="color-box-lg" style="background-color:{{color}}"></div>{%endfor%}
 					<h4>Location: {{route.location}}</h4>
 					{%if route.setter%}<h5>Set by {{route.setter.get_full_name|default:route.setter.username}}</h5>{%else%}<h5>Set by Unknown</h5>{%endif%}
 					<h5>Set on {{route.date_set}}</h5>

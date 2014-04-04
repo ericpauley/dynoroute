@@ -104,6 +104,14 @@ class Gym(DatedMixin):
     desc = models.TextField(blank=True, null=True)
     image = models.ImageField(blank=True, null=True, upload_to=about_image_upload)
 
+    TAPE_COLOR_CHOICES = (
+        (1, 1),
+        (2, 2),
+        (3, 3),
+    )
+
+    tape_colors = models.IntegerField(default=2, choices=TAPE_COLOR_CHOICES)
+
     TOP_ROPE_FORMAT_CHOICES = (
         ("yds_abcd", "YDS ABCD"),
         ("yds_plusminus", "YDS +/-"),
@@ -194,7 +202,7 @@ class Route(DatedMixin, SluggedMixin):
     grade = models.DecimalField(blank=False, max_digits=10, decimal_places=2)
     setter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='routes', blank=True, null=True)
     location = models.CharField(max_length=32)
-    date_set = models.DateField(default=datetime.date.today())
+    date_set = models.DateField(default=datetime.date.today)
     date_torn = models.DateField(blank=True, null=True)
     gym = models.ForeignKey(Gym, related_name='routes')
     notes = models.TextField(blank=True)
@@ -224,6 +232,9 @@ class Route(DatedMixin, SluggedMixin):
         grade_list = sorted(rating_scales[format], key=lambda x:abs(x[0]-self.grade))
         return grade_list[0][1]
 
+    def colors(self):
+        return [color for color in [self.color1, self.color2, self.color3] if color !="#ffffff"]
+
     status = models.CharField(choices=STATUS_CHOICES, max_length=16, blank=False, default="complete")
 
     COLOR_CHOICES=(
@@ -246,6 +257,7 @@ class Route(DatedMixin, SluggedMixin):
 
     color1 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
     color2 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
+    color3 = models.CharField(max_length=7, choices=COLOR_CHOICES, default="#ffffff")
 
     def save(self, *args, **kwargs):
         if self.status == 'torn':

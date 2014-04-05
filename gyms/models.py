@@ -83,6 +83,63 @@ def build_ratings():
         (1010, "OPEN"),
     ]
 
+    rating_scales['french'] = [
+        (Decimal(4), "4a"),
+        (Decimal(5), "4b"),
+        (Decimal(6), "4c"),
+        (Decimal(7), "5a"),
+        (Decimal(8), "5b"),
+        (Decimal(9), "5c"),
+        (Decimal(10), "6a"),
+        (Decimal(10.25), "6a+"),
+        (Decimal(10.5), "6b"),
+        (Decimal(10.75), "6b+"),
+        (Decimal(11.25), "6c"),
+        (Decimal(11.5), "6c+"),
+        (Decimal(11.75), "7a"),
+        (Decimal(12), "7a+"),
+        (Decimal(12.25), "7b"),
+        (Decimal(12.5), "5b+"),
+        (Decimal(12.75), "7c"),
+        (Decimal(13), "7c+"),
+        (Decimal(13.25), "8a"),
+        (Decimal(13.5), "8a+"),
+        (Decimal(13.75), "8b"),
+        (Decimal(14), "8b+"),
+        (Decimal(14.25), "8c"),
+        (Decimal(14.5), "8c+"),
+        (Decimal(14.75), "9a"),
+        (Decimal(15), "9a+"),
+        (Decimal(15.25), "9b"),
+        (Decimal(15.5), "9b+"),
+    ]
+
+    rating_scales['font'] = [
+        (Decimal(999.75), "4-"),
+        (Decimal(1000), "4"),
+        (Decimal(1000.25), "4+"),
+        (Decimal(1001), "5"),
+        (Decimal(1002), "5+"),
+        (Decimal(1003), "6A"),
+        (Decimal(1003.5), "6A+"),
+        (Decimal(1004), "6B"),
+        (Decimal(1004.5), "6B+"),
+        (Decimal(1005), "6C"),
+        (Decimal(1005.5), "6C+"),
+        (Decimal(1006), "7A"),
+        (Decimal(1007), "7A+"),
+        (Decimal(1008), "7B"),
+        (Decimal(1008.5), "7B+"),
+        (Decimal(1009), "7C"),
+        (Decimal(1010), "7C+"),
+        (Decimal(1011), "8A"),
+        (Decimal(1012), "8A+"),
+        (Decimal(1013), "8B"),
+        (Decimal(1014), "8B+"),
+        (Decimal(1015), "8C"),
+        (Decimal(1016), "8C+"),
+    ]
+
 build_ratings()
 
 class Gym(DatedMixin):
@@ -115,11 +172,13 @@ class Gym(DatedMixin):
     TOP_ROPE_FORMAT_CHOICES = (
         ("yds_abcd", "YDS ABCD"),
         ("yds_plusminus", "YDS +/-"),
+        ("french", "French")
     )
 
     BOULDERING_FORMAT_CHOICES = (
         ("hueco", "Hueco"),
         ("riao", "RIAO"),
+        ("font", "Font")
     )
 
     top_rope_format = models.CharField(max_length=16, choices=TOP_ROPE_FORMAT_CHOICES, default="yds_plusminus")

@@ -7,6 +7,30 @@
 
         <div class="col-md-12">
 
+            {%if route.num_flags%}
+            <div class="portlet">
+
+                <div class="portlet-header">
+
+                    <h3>
+                        Route Flags
+                    </h3>
+
+                </div> <!-- /.portlet-header -->
+                <div class="portlet-content">
+                    {%for flag in route.routeflag_set.all%}
+                    <blockquote>
+                      {{flag.message|linebreaks}}
+                      <footer>{{flag.user.get_full_name}} {{flag.created|timesince}} ago</footer>
+                    </blockquote>
+                    {%endfor%}
+                    <form action="{% url 'dismiss_flags' gym=gym.slug route=route.slug%}" method="POST">{%csrf_token%}
+                        <input type="submit" value="Dismiss Flags" class="btn btn-primary"/>
+                    </form>
+                </div> <!-- /.portlet-content -->
+            </div> <!-- /.portlet -->
+            {%endif%}
+
             <div class="portlet">
 
                 <div class="portlet-header">

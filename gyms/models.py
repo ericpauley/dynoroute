@@ -237,7 +237,7 @@ class GymFollow(DatedMixin):
 
 class RouteManager(models.Manager):
     def get_queryset(self):
-        return super(RouteManager, self).get_queryset().annotate(score=models.Avg('rating__score'))
+        return super(RouteManager, self).get_queryset().annotate(score=models.Avg('rating__score'), num_flags=models.Count('routeflag'))
 
 def get_image_name(self, filename):
         sha = sha256()
@@ -334,6 +334,11 @@ class RouteUserMixin(models.Model):
         unique_together = (("route", "user"),)
         abstract = True
 
+class RouteFlag(DatedMixin, models.Model):
+    route = models.ForeignKey(Route)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    active = models.BooleanField(default=True)
+    message = models.TextField()
 
 class Send(DatedMixin, RouteUserMixin, models.Model):
     pass

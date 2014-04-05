@@ -67,6 +67,17 @@
 							<i class="fa fa-link"></i> &nbsp;&nbsp;
 							Share Route
 						</a> 
+						{%if user.is_authenticated%}
+						<a data-toggle="modal" href="#flagModal" class="list-group-item">
+							<i class="fa fa-flag"></i> &nbsp;&nbsp;
+							Flag Route
+						</a> 
+						{%else%}
+						<a href="{%url 'account_login'%}?next={{request.path|urlencode}}" class="list-group-item">
+							<i class="fa fa-flag"></i> &nbsp;&nbsp;
+							Flag Route
+						</a> 
+						{%endif%}
 					</div> <!-- /.list-group -->
 
 				</div> <!-- /.col -->
@@ -138,6 +149,27 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="flagModal" class="modal fade" ng-controller="FlagController">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Flag Route</h3>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" ng-model="message" maxlength="1000" placeholder="Enter your message here."></textarea>
+        {%verbatim%}
+        <div ng-if="message.length < 10">{{10 - message.length}} characers to go...</div>
+        <div ng-if="message.length >= 10">{{1000 - message.length}} characters left</div>
+        {%endverbatim%}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-disabled="message.length < 10" ng-click="submit()">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

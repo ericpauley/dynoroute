@@ -203,8 +203,6 @@ class RouteAJAX(JSONResponseMixin, RouteFinderMixin, View):
         user = request.user
         if user.is_anonymous():
             raise Http404
-        elif user.gym is not None:
-            raise Http404
         elif kwargs['action'] == "send":
             try:
                 Send(route=route, user=user).save()
@@ -232,6 +230,21 @@ class RouteAJAX(JSONResponseMixin, RouteFinderMixin, View):
             else:
                 Rating(user=user, route=route, score=score).save()
             return self.render_to_response(dict(success=True))
+        elif kwargs['action'] == 'flag':
+            message = json.loads(request.body)['message']
+            if 10 <= len(message) <= 1000:
+                RouteFlag(user=user, route=route, message = message).save()
+                return self.render_to_response(dict(success=True))
+            else:
+                return self.render_to_response(dict(success=False))
+
+class DismissFlags(RouteFinderMixin, View):
+
+    perms = "routes_manage"
+
+    def post(self, request, *args, **kwargs):
+        self.route.routeflag_set.all().delete()
+        return shortcuts.redirect("gym_route_edit", gym=self.gym.slug, route=self.route.slug)
 
 class GymDashboard(GymPage):
 

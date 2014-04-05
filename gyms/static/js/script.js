@@ -112,3 +112,31 @@ $("#gym-follow").click(function(){
 		$(this).prepend('<i class="fa fa-plus"></i>&nbsp;');
 	}
 })
+
+app = angular.module("dynoroute", [])
+
+app.config(function($httpProvider){
+    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+})
+
+app.controller("FlagController", function FlagController($scope, $http){
+    $scope.message = ""
+
+    $scope.submit = function(){
+        $http.post("/"+GYM+"/routes/"+ROUTE+"/flag/", {
+            message: $scope.message
+        }).success(function(){
+            $scope.message = ""
+            $("#flagModal").modal('hide')
+            $.howl ({
+                type: $(".howler").data ('type')
+                , title: ''
+                , content: 'Route flagged. Thanks for your feedback.'
+                , sticky: $(".howler").data ('sticky')
+                , lifetime: 7500
+                , iconCls: $(".howler").data ('icon')
+            });
+        })
+    }
+})

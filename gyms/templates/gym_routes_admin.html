@@ -67,7 +67,7 @@
 
 						<tbody> 
 							{%for route in object_list%}
-							<tr {% if user.perms.routes_manage %}onclick="document.location = '{%url 'gym_route_edit' gym=gym.slug route=route.slug%}'" class="clickable"{%endif%}>
+							<tr class="{%if route.num_flags%}danger{%endif%} {% if user.perms.routes_manage %}clickable{%endif%}" {% if user.perms.routes_manage %}onclick="document.location = '{%url 'gym_route_edit' gym=gym.slug route=route.slug%}'"{%endif%}>
 								{%if gym.named_routes%}<td class="hidden-xs">{{route.name}}</td>{%endif%} 
 								<td class="align-center"> 
 									{%for color in route.colors%}

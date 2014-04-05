@@ -163,13 +163,12 @@
       <div class="modal-body">
         <textarea class="form-control" ng-model="message" maxlength="1000" placeholder="Enter your message here."></textarea>
         {%verbatim%}
-        <div ng-if="message.length < 10">{{10 - message.length}} characers to go...</div>
-        <div ng-if="message.length >= 10">{{1000 - message.length}} characters left</div>
+        <div>{{1000 - message.length}} characters left</div>
         {%endverbatim%}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" ng-disabled="message.length < 10" ng-click="submit()">Submit</button>
+        <button type="button" class="btn btn-primary" ng-click="submit()">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

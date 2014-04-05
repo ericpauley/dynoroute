@@ -232,7 +232,7 @@ class RouteAJAX(JSONResponseMixin, RouteFinderMixin, View):
             return self.render_to_response(dict(success=True))
         elif kwargs['action'] == 'flag':
             message = json.loads(request.body)['message']
-            if 10 <= len(message) <= 1000:
+            if len(message) <= 1000:
                 RouteFlag(user=user, route=route, message = message).save()
                 return self.render_to_response(dict(success=True))
             else:

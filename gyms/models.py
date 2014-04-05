@@ -156,9 +156,9 @@ class Gym(DatedMixin):
     logo = models.ImageField(blank=True, upload_to=logo_upload)
 
     website_url = models.URLField(blank=True)
-    phone = models.CharField(blank=True, null=True, max_length=255)
+    phone = models.CharField("Phone Number", blank=True, null=True, max_length=255)
     address = models.TextField(blank=True, null=True)
-    desc = models.TextField(blank=True, null=True)
+    desc = models.TextField("Description", blank=True, null=True)
     image = models.ImageField(blank=True, null=True, upload_to=about_image_upload)
 
     TAPE_COLOR_CHOICES = (

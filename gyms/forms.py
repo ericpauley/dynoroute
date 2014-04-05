@@ -53,7 +53,7 @@ class RouteForm(ModelForm):
 class GymSettingsForm(ModelForm):
 
     class Meta:
-        fields = ['name', 'named_routes', 'location_options', 'top_rope_format', 'lead_format', 'bouldering_format', 'tape_colors']
+        fields = ['name', 'named_routes', 'location_options', 'top_rope_format', 'lead_format', 'bouldering_format', 'tape_colors', "phone", "address", "desc"]
         model=Gym
 
 class GymAuthForm(AuthenticationForm):

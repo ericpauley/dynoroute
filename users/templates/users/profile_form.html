@@ -1,0 +1,37 @@
+{% extends "user_base.html" %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+{%block header%}
+<div id="content-header">
+            <h1>Dashboard</h1>
+</div> <!-- #content-header --> 
+{%endblock%}
+{% block content %}
+<div id="content-container">
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="portlet">
+
+                <div class="portlet-header">
+
+                    <h3>
+                        {%block title%}Edit Profile{%endblock%}
+                    </h3>
+
+                </div> <!-- /.portlet-header -->
+                <div class="portlet-content">
+                    <form method="POST" action="">{%csrf_token%}
+                        {%bootstrap_form form%}
+                        <button type="submit" class="btn btn-primary">
+                            Submit
+                        </button>
+                        
+                    </form>
+                </div> <!-- /.portlet-content -->
+            </div> <!-- /.portlet -->
+        </div> <!-- /.col-md-12 -->
+    </div> <!-- /.row -->
+</div>
+{% endblock %}

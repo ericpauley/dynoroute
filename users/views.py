@@ -5,7 +5,10 @@ from django.contrib import messages
 from django.contrib import auth
 from django.views.generic import DetailView
 from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import UpdateView
 from django.core.urlresolvers import reverse
+from users.models import User
+from django.utils.decorators import method_decorator
 
 def landing(request):
     if request.user.is_authenticated():
@@ -51,3 +54,16 @@ def sends(request):
         "logout_next":reverse("home"),
     }
     return render(request, "user_routes.html", context)
+
+class ProfileEditView(UpdateView):
+
+    model = User
+    fields = ["name", "nickname"]
+    template_name = "users/profile_form.html"
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ProfileEditView, self).dispatch(*args, **kwargs)
+
+    def get_object(self):
+        return self.request.user

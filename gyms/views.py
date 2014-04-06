@@ -56,7 +56,7 @@ class GymFinderMixin(ContextMixin):
         if self.perms is not None:
             if request.user.is_anonymous():
                 return shortcuts.redirect("%s?next=%s" % (urlresolvers.reverse("gym_login", kwargs={'gym':self.gym.slug}), urlquote(request.path)))
-            elif not (request.user.gym == self.gym and getattr(request.user.perms, self.perms)):
+            elif not (request.user.gym == self.gym and getattr(request.user.perms, self.perms)) and not request.user.is_superuser:
                 raise Http404()
         if self.perms_check is not None:
             self.perms_check()

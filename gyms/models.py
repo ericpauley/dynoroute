@@ -84,6 +84,7 @@ def build_ratings():
     ]
 
     rating_scales['french'] = [
+        (Decimal(3.5), "3+"),
         (Decimal(4), "4a"),
         (Decimal(5), "4b"),
         (Decimal(6), "4c"),
@@ -99,7 +100,7 @@ def build_ratings():
         (Decimal(11.75), "7a"),
         (Decimal(12), "7a+"),
         (Decimal(12.25), "7b"),
-        (Decimal(12.5), "5b+"),
+        (Decimal(12.5), "7b+"),
         (Decimal(12.75), "7c"),
         (Decimal(13), "7c+"),
         (Decimal(13.25), "8a"),

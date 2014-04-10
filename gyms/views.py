@@ -269,11 +269,11 @@ class GymStats(JSONResponseMixin, GymFinderMixin, DetailView):
         d = {}
         for k,v in self.gym.grades(type="top_rope").items():
             d[round(k)] = d.get(round(k), 0)+v
-        context['top_rope_grades'] = self.split({Route(gym=self.gym, grade=k).get_grade_display():v for k,v in d.items()})
+        context['top_rope_grades'] = self.split({Route(gym=self.gym, grade=Decimal(k), type="top_rope").get_grade_display():v for k,v in d.items()})
         d = {}
         for k,v in self.gym.grades(type="bouldering").items():
             d[round(k)] = d.get(round(k), 0)+v
-        context['bouldering_grades'] = self.split({Route(gym=self.gym, grade=k).get_grade_display():v for k,v in d.items()})
+        context['bouldering_grades'] = self.split({Route(gym=self.gym, grade=Decimal(k), type="bouldering").get_grade_display():v for k,v in d.items()})
         context['types'] = self.split(self.gym.types())
         context['setters'] = self.split(self.gym.setters())
         context['locations'] = self.split(self.gym.locations())

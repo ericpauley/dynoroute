@@ -91,6 +91,21 @@
 					{%if route.setter%}<h5>Set by {{route.setter.nickname|default:route.setter.get_full_name}}</h5>{%else%}<h5>Set by Unknown</h5>{%endif%}
 					<h5>Set on {{route.date_set}}</h5>
 					{%if route.date_torn%}<h5>Torn on {{route.date_torn}}</h5>{%endif%}
+                    <div id="disqus_thread"></div>
+                    <script type="text/javascript">
+                        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                        var disqus_shortname = 'dynoroute'; // required: replace example with your forum shortname
+
+                        /* * * DON'T EDIT BELOW THIS LINE * * */
+                        (function() {
+                            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                        })();
+                    </script>
+                    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
 				</div>
 
 			</div>

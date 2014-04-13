@@ -140,3 +140,37 @@ app.controller("FlagController", function FlagController($scope, $http){
         })
     }
 })
+
+app.controller("RoutesController", function RoutesController($scope, $http){
+    $scope.checked = 0;
+    $scope.dismissible = 0;
+    $scope.tearable = 0;
+
+    $scope.check = function(event){
+        if(event){
+            $scope.checked-= 1
+        }else{
+            $scope.checked+= 1
+        }
+    }
+
+    $scope.dismiss = function(event){
+        if(event){
+            $scope.dismissible-= 1
+        }else{
+            $scope.dismissible+= 1
+        }
+    }
+
+    $scope.tear = function(event){
+        if(event){
+            $scope.tearable-= 1
+        }else{
+            $scope.tearable+= 1
+        }
+    }
+})
+
+$(".nopropagate").click(function(event){
+    event.stopPropagation()
+})

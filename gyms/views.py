@@ -31,6 +31,7 @@ from gyms.forms import *
 from gyms.models import *
 import datetime
 from users.models import *
+from django.contrib import messages
 
 def about(request):
     return render(request, "about.html")
@@ -154,6 +155,33 @@ class AdminRoutesPage(RoutesPage):
 
     def get_queryset(self):
         return self.gym.routes.order_by(self.get_sort()).select_related('setter')
+
+    def post(self, request, *args, **kwargs):
+        if not self.request.user.perms.routes_manage:
+            return shortcuts.redirect(request.path)
+        routes = []
+        for key in request.POST.keys():
+            if key.startswith("route_"):
+                try:
+                    route = Route.objects.get(slug=key[6:])
+                    if route.gym == self.gym:
+                        routes.append(route)
+                except Route.DoesNotExist:
+                    pass
+        if "_tear" in request.POST:
+            for route in routes:
+                route.status="torn"
+                route.save()
+            messages.success(request, "Routes successfully torn")
+        if "_dismiss" in request.POST:
+            for route in routes:
+                route.routeflag_set.all().delete()
+            messages.success(request,"Route notifications dismissed")
+        elif "_delete" in request.POST:
+            for route in routes:
+                route.delete()
+            messages.success(request,"Routes Deleted")
+        return shortcuts.redirect(request.path)
 
 class RouteFinderMixin(GymFinderMixin):
 

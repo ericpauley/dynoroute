@@ -6,12 +6,23 @@
 		<div class="col-md-12">
 
 			<div class="portlet">
-
+				<form method="POST">{%csrf_token%}
+				<div ng-app="dynoroute" ng-controller="RoutesController">
 				<div class="portlet-header">
 
 					<h3>
 						Routes
 					</h3>
+
+					<ul class="portlet-tools" ng-if="tearable" ng-cloak>
+							<input type="submit" name="_tear" class="btn btn-sm" value="Tear Selected"/>
+					</ul>
+					<ul class="portlet-tools" ng-if="dismissible" ng-cloak>
+							<input type="submit" name="_dismiss" class="btn btn-sm" value="Dismiss Flags"/>
+					</ul>
+					<ul class="portlet-tools" ng-if="checked" ng-cloak>
+						<input type="submit" name="_delete" class="btn btn-sm" value="Delete Selected"/>
+					</ul>
 
 					<ul class="portlet-tools pull-right">
 						<div class="btn-group">
@@ -46,6 +57,7 @@
 
 				</div> <!-- /.portlet-header -->
 
+				
 				<div class="portlet-content">
 
 
@@ -54,6 +66,7 @@
 					<table id="gym-routes" class="table table-striped table-checkable"> 
 						<thead> 
 							<tr> 
+								{% if user.perms.routes_manage %}<th></th>{%endif%}
 								{%if gym.named_routes%}
 								<th class="align-center hidden-xs">Name</th>
 								{%endif%}
@@ -61,13 +74,16 @@
 								<th>Grade</th> 
 								<th>Location</th>
 								<th>Setter</th>
-								<th class="hidden-xs">User Rating</th> 
+								<th class="hidden-xs">User Rating</th>
+								<th class="hidden-xs">Status</th> 
 							</tr> 
 						</thead> 
 
 						<tbody> 
 							{%for route in object_list%}
 							<tr class="{%if route.num_flags%}danger{%endif%} {% if user.perms.routes_manage %}clickable{%endif%}" {% if user.perms.routes_manage %}onclick="document.location = '{%url 'gym_route_edit' gym=gym.slug route=route.slug%}'"{%endif%}>
+								{% if user.perms.routes_manage %}
+								<td class="nopropagate"><input type="checkbox" name="route_{{route.slug}}" ng-model="route{{route.slug}}" ng-click="check(route{{route.slug}});{%if route.num_flags%}dismiss(route{{route.slug}}){%endif%}{%if route.status != 'torn'%};tear(route{{route.slug}}){%endif%};$event.stopPropogation()"/></td>{%endif%}
 								{%if gym.named_routes%}<td class="hidden-xs">{{route.name}}</td>{%endif%} 
 								<td class="align-center"> 
 									{%for color in route.colors%}
@@ -78,6 +94,15 @@
 								<td>{{route.location}}</td>
 								<td>{%if route.setter%}{{route.setter.display}}{%endif%}</td>
 								<td class="hidden-xs">{{route.score|floatformat:1}}</td> 
+								{%if route.status == "complete"%}
+								<td class="hidden-xs"><span class="label label-success">Complete</span></td> 
+								{%elif route.status == "in_progress"%}
+								<td class="hidden-xs"><span class="label label-warning">In progress</span></td>
+								{%elif route.status == "not_started"%}
+								<td class="hidden-xs"><span class="label label-default">Not Started</span></td>
+								{%elif route.status == "torn"%}
+								<td class="hidden-xs"><span class="label label-danger">Torn</span></td>
+								{%endif%}
 							</tr>
 							{%endfor%}
 						</tbody> 
@@ -86,6 +111,8 @@
 					</div> <!-- /.table-responsive -->
 					
 				</div> <!-- /.portlet-content -->
+				</div>
+				</form>
 
 			</div> <!-- /.portlet -->
 

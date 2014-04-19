@@ -29,6 +29,9 @@ INTERNAL_IPS = (
     '127.0.0.1',
 )
 
+DISQUS_SECRET_KEY = os.environ.get("DISQUS_SECRET_KEY")
+DISQUS_PUBLIC_KEY = os.environ.get("DISQUS_PUBLIC_KEY")
+
 ACCOUNT_SIGNUP_FORM_CLASS = 'users.forms.CustomSignupForm'
 
 # Application definition
@@ -95,6 +98,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
     "allauth.account.context_processors.account",
+    'users.context_processors.disqus_sso'
 )
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.

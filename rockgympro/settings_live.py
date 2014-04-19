@@ -20,6 +20,7 @@ DATABASES = {
 }'''
 
 DEFAULT_FROM_EMAIL = "noreply@dynoroute.com"
+ACCOUNT_DEFAULT_HTTP_PROTOCOL ="https"
 
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',

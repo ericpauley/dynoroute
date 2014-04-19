@@ -1,4 +1,4 @@
-django django.shortcuts import redirect
+from django.shortcuts import redirect
 
 class HttpsRedirectMiddleware(object):
 

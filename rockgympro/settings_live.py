@@ -68,7 +68,7 @@ STORAGES_S3BOTO_MULTI = {
     }
 }
 
-STATIC_URL = "http://static.dynoroute.com/"
+STATIC_URL = "https://dynoroute_static.s3.amazonaws.com/"
 
 AWS_SES_REGION_NAME = 'us-east-1'
 AWS_SES_REGION_ENDPOINT = 'email.us-east-1.amazonaws.com'

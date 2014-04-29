@@ -31,7 +31,7 @@ class RouteForm(ModelForm):
             ("Lead", [(None, "---------")] +  rating_scales[gym.lead_format]),
             ("Bouldering", [(None, "---------")] + rating_scales[gym.bouldering_format]),
         )
-        self.fields['grade'].initial = self.instance.grade
+        self.initial['grade'] = self.instance.get_grade()
         if gym.tape_colors < 2:
             del self.fields['color2']
         if gym.tape_colors < 3:

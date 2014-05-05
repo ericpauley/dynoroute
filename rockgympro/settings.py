@@ -50,7 +50,8 @@ INSTALLED_APPS = (
     'bootstrap3',
     'allauth',
     'allauth.account',
-    'debug_toolbar'
+    'debug_toolbar',
+    "easy_pdf",
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False

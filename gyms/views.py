@@ -32,6 +32,7 @@ from gyms.models import *
 import datetime
 from users.models import *
 from django.contrib import messages
+import easy_pdf.rendering
 
 def about(request):
     return render(request, "about.html")
@@ -173,7 +174,7 @@ class AdminRoutesPage(RoutesPage):
                 route.status="torn"
                 route.save()
             messages.success(request, "Routes successfully torn")
-        if "_dismiss" in request.POST:
+        elif "_dismiss" in request.POST:
             for route in routes:
                 route.routeflag_set.all().delete()
             messages.success(request,"Route notifications dismissed")
@@ -181,6 +182,9 @@ class AdminRoutesPage(RoutesPage):
             for route in routes:
                 route.delete()
             messages.success(request,"Routes Deleted")
+        elif "_print" in request.POST:
+            context = {"routes": routes, "gym": self.gym}
+            return easy_pdf.rendering.render_to_pdf_response(request, "routes_list_print.html", context)
         return shortcuts.redirect(request.path)
 
 class RouteFinderMixin(GymFinderMixin):

@@ -1,49 +1,37 @@
 {% extends "easy_pdf/base.html" %}
 
-{% block extra_style %}
-    <style type="text/css">
-        .color-box {
-            display: inline-block;
-            margin: 0 auto;
-            width: 15px;
-            height: 15px;
-            border: 1px solid #888888;
-        }
-
-        .color-box-lg {
-            display: inline-block;
-            margin: 0 auto;
-            width: 25px;
-            height: 25px;
-            border: 1px solid #888888;
-        }
-    </style>
-{% endblock %}
-
 {% block content %}
-    <div id="content">
-        <table id="gym-routes" class="table table-striped table-checkable"> 
-                <tr> 
-                    {%if gym.named_routes%}<td>Name</td>{%endif%}
-                    <td>Color</td> 
-                    <td>Grade</td> 
-                    <td>Location</td>
-                    <td>Setter</td>
-                </tr> 
+	<div id="content">
+		<div class="main">
+	        <table style="font-size: 20px;"> 
+	            <tr> 
+	                {%if gym.named_routes%}<th align="left">Name</th>{%endif%}
+	                <th align="left">Color</th> 
+	                <th align="left">Grade</th> 
+	                <th align="left">Location</th>
+	                <th align="left">Setter</th>
+	            </tr> 
 
-                {%for route in routes%}
-                <tr>
-                    {%if gym.named_routes%}<td>{{route.name}}</td>{%endif%} 
-                    <td> 
-                        {%for color in route.colors%}
-                        <div style="background: {{color}}"></div>
-                        {%endfor%}
-                    </td>
-                    <td>{{route.get_grade_display}}</td> 
-                    <td>{{route.location}}</td>
-                    <td>{{route.setter}}</td>
-                </tr>
-                {%endfor%}
-        </table>
-    </div>
+	            {%for route in routes%}
+	            <tr>
+	                {%if gym.named_routes%}<td>{{route.name}}</td>{%endif%} 
+	                <td valign="top" style="line-height: 25px;"> 
+	                   	{%if route.colors%}
+	                    <table style="padding-right: 5px; border: 2px solid black;">
+	                    	<tr>
+	                    		{%for color in route.colors%}
+	                    		<td width="15" height="15" style="background-color: {{color}}; padding-right: 5px">&nbsp;</td>
+	                    		{%endfor%}
+	                    	</tr>
+	                    </table>
+	                    {%endif%}
+	                </td>
+	                <td>{{route.get_grade_display}}</td> 
+	                <td>{{route.location}}</td>
+	                <td>{{route.setter}}</td>
+	            </tr>
+	            {%endfor%}
+	        </table>
+	    </div>
+	</div>
 {% endblock %}

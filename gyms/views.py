@@ -27,6 +27,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.base import ContextMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import FormView
 from gyms.forms import *
 from gyms.models import *
 import datetime
@@ -186,6 +187,19 @@ class AdminRoutesPage(RoutesPage):
             context = {"routes": routes, "gym": self.gym}
             return easy_pdf.rendering.render_to_pdf_response(request, "routes_list_print.html", context)
         return shortcuts.redirect(request.path)
+
+class RoutesPrint(GymFinderMixin, FormView):
+    perms = "admin_view"
+    template_name = 'print_routes.html'
+    form_class = PrintForm
+
+    def form_valid(self, form):
+        routes = self.gym.routes.filter(status="complete",
+            date_set__lte=form.cleaned_data['end'],
+            date_set__gte=form.cleaned_data['start'],
+            )
+        context = {"routes": routes, "gym": self.gym, 'start': form.cleaned_data['start'], 'end': form.cleaned_data['end']}
+        return easy_pdf.rendering.render_to_pdf_response(self.request, "routes_list_print.html", context)
 
 class RouteFinderMixin(GymFinderMixin):
 

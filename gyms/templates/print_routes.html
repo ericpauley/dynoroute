@@ -1,0 +1,33 @@
+{% extends "gym_backend.html" %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+{% block content %}
+<div id="content-container">
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="portlet">
+
+                <div class="portlet-header">
+
+                    <h3>
+                        Print Routes
+                    </h3>
+
+                </div> <!-- /.portlet-header -->
+                <div class="portlet-content">
+                    <form method="POST" action="">{%csrf_token%}
+                        {%bootstrap_field form.start%}
+                        {%bootstrap_field form.end%}
+                        <button type="submit" class="btn btn-primary">
+                            Print
+                        </button>
+                        
+                    </form>
+                </div> <!-- /.portlet-content -->
+            </div> <!-- /.portlet -->
+        </div> <!-- /.col-md-12 -->
+    </div> <!-- /.row -->
+</div>
+{% endblock %}

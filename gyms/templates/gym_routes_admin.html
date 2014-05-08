@@ -23,8 +23,10 @@
 					<ul class="portlet-tools" ng-if="checked" ng-cloak>
 						<input type="submit" name="_delete" class="btn btn-sm" value="Delete Selected"/>
 					</ul>
-					<ul class="portlet-tools" ng-if="checked" ng-cloak>
-						<input type="submit" name="_print" class="btn btn-sm" value="Print Routes"/>
+					<ul class="portlet-tools pull-right">
+						<a href="{%url 'gym_routes_print' gym=gym.slug%}" class="btn btn-sm" target="_self">
+							Print Routes
+						</a>
 					</ul>
 
 					<ul class="portlet-tools pull-right">

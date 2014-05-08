@@ -9,6 +9,25 @@ from django.utils.safestring import mark_safe
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from datetime import *
+
+class PrintForm(forms.Form):
+
+    end = forms.DateField(initial=date.today(),
+        widget = forms.DateInput(attrs={'data-date-autoclose':"true", "data-auto-close":'true'}, format="%m/%d/%Y"),)
+    start = forms.DateField(initial=date.today()-timedelta(weeks=1),
+        widget = forms.DateInput(attrs={'data-date-autoclose':"true", "data-auto-close":'true'}, format="%m/%d/%Y"),)
+  
+
+    def clean_end(self):
+        if self.cleaned_data['end'] > date.today():
+            raise ValidationError("End date cannot be in the future.", code="end_future")
+        return self.cleaned_data['end']
+
+    def clean_start(self):
+        if self.cleaned_data['start'] > self.cleaned_data['end']:
+            raise ValidationError("Start date cannot be after end date.", code="start_after_end")
+        return self.cleaned_data['start']
 
 class RouteForm(ModelForm):
 

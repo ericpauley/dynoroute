@@ -66,7 +66,7 @@ $(function () {
 
     $("[name='type']:checked").click()
 
-	$('#route-date-set').datepicker ()
+	$('[data-date-autoclose]').datepicker ()
 
 	$('[data-widget=color-widget]').simplecolorpicker({
 		picker: true
